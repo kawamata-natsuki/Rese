@@ -13,6 +13,7 @@ class Genre extends Model
         'name',
     ];
 
+    // リレーション定義
     public function shops()
     {
         return $this->hasMany(Shop::class);

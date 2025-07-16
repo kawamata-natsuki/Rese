@@ -31,7 +31,7 @@ class User extends Authenticatable
         'role' => Role::class,
     ];
 
-    // リレーション
+    // リレーション定義
     public function reviews()
     {
         return $this->hasMany(Review::class);
