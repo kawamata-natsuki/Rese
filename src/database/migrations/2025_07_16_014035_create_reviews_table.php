@@ -15,9 +15,9 @@ return new class extends Migration
             $table->unsignedBigInteger('reservation_id')->nullable();
             $table->tinyInteger('rating'); // レビュー評価(1-5)
             $table->text('comment');
+            $table->timestamp('skipped_at')->nullable();
             $table->softDeletes();
             $table->timestamps();
-            $table->timestamp('skipped_at')->nullable();
 
             // 複合ユニークキー
             $table->unique(['user_id', 'reservation_id']);
