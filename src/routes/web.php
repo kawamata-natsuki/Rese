@@ -3,27 +3,36 @@
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Shop\SearchController;
+use App\Http\Controllers\Shop\ShopController;
+use App\Http\Controllers\User\FavoriteController;
+use App\Http\Controllers\User\MypageController;
+use App\Http\Controllers\User\ReservationController;
+use App\Http\Controllers\User\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 // ===============================
 // 認証ルート
 // ===============================
 
-// 一般ユーザー
+// ユーザー登録
 Route::get('/register', [RegisterController::class, 'showRegisterView'])
     ->name('register.view');
 Route::post('/register', [RegisterController::class, 'store'])
     ->name('register');
+Route::get('/register/thanks', [RegisterController::class, 'thanks'])
+    ->name('register.thanks');
 
+// ログイン・ログアウト
 Route::get('/login', [LoginController::class, 'showLoginView'])
     ->name('login.view');
 Route::post('/login', [LoginController::class, 'login'])
     ->name('login');
-
 Route::post('/logout', [LoginController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
+// メール認証
 Route::prefix('email')->name('verification.')->middleware('auth')->group(function () {
     Route::get('/verify', [EmailVerificationController::class, 'notice'])
         ->name('notice');
@@ -35,4 +44,54 @@ Route::prefix('email')->name('verification.')->middleware('auth')->group(functio
         ->name('send');
     Route::get('/check', [EmailVerificationController::class, 'check'])
         ->name('check');
+});
+
+// ===============================
+// 一般ユーザー機能
+// ===============================
+
+// 飲食店関連ページ（一覧・詳細・検索）
+Route::name('shop.')->middleware((['auth', 'verified']))->group(function () {
+    Route::get('/', [ShopController::class, 'index'])
+        ->name('index');
+    Route::get('/shops/{shop}', [ShopController::class, 'show'])
+        ->name('show');
+    Route::post('/shops/search', [SearchController::class, 'search'])
+        ->name('search');
+});
+
+Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(function () {
+    // 予約処理（登録・完了・変更・キャンセル）
+    Route::prefix('reservations')->name('reservations.')->group(function () {
+        Route::post('/', [ReservationController::class, 'store'])
+            ->name('store');
+        Route::get('/done', [ReservationController::class, 'done'])
+            ->name('done');
+        Route::patch('/{reservation}', [ReservationController::class, 'update'])
+            ->name('update');
+        Route::delete('/{reservation}', [ReservationController::class, 'destroy'])
+            ->name('destroy');
+    });
+
+    // お気に入り登録・解除
+    Route::prefix('favorites')->name('favorites.')->group(function () {
+        Route::post('/', [FavoriteController::class, 'store'])
+            ->name('store');
+        Route::delete('/{shop}', [FavoriteController::class, 'destroy'])
+            ->name('destroy');
+    });
+
+    // レビュー表示・投稿・スキップ
+    Route::prefix('reviews')->name('reviews.')->group(function () {
+        Route::get('/', [ReviewController::class, 'index'])
+            ->name('index');
+        Route::post('/{reservation}', [ReviewController::class, 'store'])
+            ->name('store');
+        Route::post('/{reservation}/skip', [ReviewController::class, 'skip'])
+            ->name('skip');
+    });
+
+    // マイページ表示
+    Route::get('/mypage', [MypageController::class, 'index'])
+        ->name('mypage.index');
 });
