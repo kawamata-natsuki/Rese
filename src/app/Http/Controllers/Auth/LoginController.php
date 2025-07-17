@@ -7,5 +7,18 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    //
+    public function showLoginView()
+    {
+        return view('auth.login');
+    }
+
+    public function login()
+    {
+        // ログイン処理
+    }
+
+    public function logout()
+    {
+        // ログアウト処理
+    }
 }
