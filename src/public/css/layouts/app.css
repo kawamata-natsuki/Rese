@@ -1,10 +1,14 @@
+body {
+  background-color: #eeeeee;
+}
+
 /* ==========================
    ヘッダー
 ========================== */
 .header {
   position: relative;
   width: 100%;
-  background: #fff;
+  background-color: #eeeeee;
 }
 
 .header__inner {
@@ -92,6 +96,10 @@
 /* ==========================
    ハンバーガートグル
 ========================== */
+.header__menu-toggle:checked~.header {
+  background-color: #fff;
+}
+
 .header__menu-toggle:checked~.header__nav-content {
   visibility: visible;
   opacity: 1;
