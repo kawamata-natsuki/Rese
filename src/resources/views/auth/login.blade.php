@@ -1,14 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
+@section('css')
+@endsection
 
-<body>
-  <p>ログイン画面</p>
-</body>
+@section('title', 'ログイン')
 
-</html>
+@section('content')
+<div class="login-page">
+  <div class="login-page__container">
+    <h1 class="login-page__heading content__heading">
+      ログイン
+    </h1>
+  </div>
+</div>
+@endsection
