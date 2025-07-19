@@ -1,35 +1,29 @@
 <header class="header">
-  <div class="header__inner"><!-- ハンバーガーメニュー -->
-    <button class="hamburger-overlay" aria-label="メニュー" aria-controls="overlay-menu" aria-expanded="false">
-      <span class="hamburger-overlay__line"></span>
-      <span class="hamburger-overlay__line"></span>
-      <span class="hamburger-overlay__line"></span>
-    </button>
+  <div class="header__inner">
+    <!-- ハンバーガーメニュー -->
+    <input type="checkbox" id="menu-toggle" class="header__menu-toggle" hidden>
+    <label for="menu-toggle" class="header__hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </label>
 
     <!-- ロゴ -->
     <div class="header__logo">
-      <a href="{{ route('shop.index') }}" class="header__logo--link">
-        <span class="logo-text">Rese</span>
+      <a href="{{ route('shop.index') }}" class="header__logo-link">
+        <span class="header__logo-text">Rese</span>
       </a>
     </div>
-  </div>
 
-  <!-- フルスクリーンメニュー -->
-  <nav id="overlay-menu" class="nav-overlay" aria-hidden="true">
-    <div class="nav-overlay__content">
-      <ul class="nav-overlay__list">
-        <li class="nav-overlay__item">
-          <a href="#" class="nav-overlay__link">Home</a>
-        </li>
-        <li class="nav-overlay__item">
-          <a href="#" class="nav-overlay__link">Registration</a>
-        </li>
-        <li class="nav-overlay__item">
-          <a href="#" class="nav-overlay__link">Login</a>
-        </li>
+    <!-- フルスクリーンメニュー -->
+    <nav class="header__nav-content">
+      <ul class="header__nav-list">
+        <li class="header__nav-item"><a href="#" class="header__nav-link">Home</a></li>
+        <li class="header__nav-item"><a href="#" class="header__nav-link">Registration</a></li>
+        <li class="header__nav-item"><a href="#" class="header__nav-link">Login</a></li>
       </ul>
-    </div>
-  </nav>
+    </nav>
+  </div>
 
   @if (Request::is('/'))
   @include('components.search')
