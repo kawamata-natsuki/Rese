@@ -19,8 +19,8 @@
     <nav class="header__nav-content">
       <ul class="header__nav-list">
         <li class="header__nav-item"><a href="#" class="header__nav-link">Home</a></li>
-        <li class="header__nav-item"><a href="#" class="header__nav-link">Registration</a></li>
-        <li class="header__nav-item"><a href="#" class="header__nav-link">Login</a></li>
+        <li class="header__nav-item"><a href="{{route('register')}}" class="header__nav-link">Registration</a></li>
+        <li class="header__nav-item"><a href="{{route('login')}}" class="header__nav-link">Login</a></li>
       </ul>
     </nav>
   </div>
