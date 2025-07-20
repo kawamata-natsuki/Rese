@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             AreaSeeder::class,
             GenreSeeder::class,
             ShopSeeder::class,
+            TestUserSeeder::class,
         ]);
     }
 }
