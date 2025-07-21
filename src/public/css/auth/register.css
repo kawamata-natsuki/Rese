@@ -14,6 +14,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   background-color: #fff;
+  margin-bottom: 80px;
 }
 
 .register-page__heading {
@@ -31,18 +32,16 @@
   padding: 36px 20px 20px 20px;
 }
 
-
 .register-page__form-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
 .register-page__form-group {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .register-page__label {
@@ -71,7 +70,7 @@
 .register-page__button {
   display: flex;
   justify-content: flex-end;
-  margin: 12px 8px 0 0;
+  margin: 0 8px;
 }
 
 .register-button {
