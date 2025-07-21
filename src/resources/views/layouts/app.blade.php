@@ -17,7 +17,9 @@
 </head>
 
 <body>
+  @if (!Request::routeIs('verification.notice'))
   @include('components.header')
+  @endif
 
   <main>
     @yield('content')
