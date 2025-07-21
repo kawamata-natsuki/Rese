@@ -20,8 +20,6 @@ Route::get('/register', [RegisterController::class, 'showRegisterView'])
     ->name('register.view');
 Route::post('/register', [RegisterController::class, 'store'])
     ->name('register');
-Route::get('/register/thanks', [RegisterController::class, 'thanks'])
-    ->name('register.thanks');
 
 // ログイン・ログアウト
 Route::get('/login', [LoginController::class, 'showLoginView'])
