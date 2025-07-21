@@ -31,7 +31,6 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             // ログイン成功したらレート制限リセット
             RateLimiter::clear($this->throttlekey($request));
-            Auth::login(Auth::user(), true);
             // セッションID再生成
             $request->session()->regenerate();
             return redirect()->route('shop.index')
