@@ -49,8 +49,8 @@
         <div class="login-page__footer">
           <!-- ログイン状態を保持 -->
           <div class="login-page__remember">
-            <input id="remember" type="checkbox" name="remember" value="1">
-            <label for="remember">ログイン状態を保持する</label>
+            <input id="remember" type="checkbox" name="remember" value="1" class="login-page__remember-checkbox">
+            <label for="remember" class="login-page__remember-label">ログイン状態を保持する</label>
           </div>
           <!-- ログインボタン -->
           <div class="login-page__button">
