@@ -12,8 +12,8 @@
   margin: 0 auto;
   border-radius: 6px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
   background-color: #fff;
+  margin-bottom: 80px;
 }
 
 .login-page__heading {
@@ -28,21 +28,20 @@
 
 .login-page__content {
   width: 100%;
-  padding: 36px 20px 20px 20px;
+  padding: 20px;
 }
 
 
 .login-page__form-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
 .login-page__form-group {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .login-page__label {
@@ -68,16 +67,54 @@
   color: #999;
 }
 
+.login-page__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .login-page__button {
   display: flex;
-  justify-content: flex-end;
-  margin: 12px 8px 0 0;
+  justify-content: center;
+  align-items: center;
+  margin: 0 8px;
 }
 
 .login-button {
+
   padding: 8px 16px;
   font-size: 1.3rem;
   background-color: #2962ff;
   border-radius: 4px;
   color: #ffffff;
+}
+
+.login-page__remember {
+  margin-left: 40px;
+  font-size: 1.2rem;
+}
+
+.error-message {
+  min-height: 28px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #d93025;
+  margin-left: 40px;
+}
+
+/* アイコン */
+.error-message::before {
+  content: none;
+}
+
+.error-message.error-message--active::before {
+  content: '';
+  background-image: url('/images/icons/alert-red.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
 }
