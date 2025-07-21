@@ -1,7 +1,7 @@
 @props(['field', 'class' => ''])
 
 @error($field)
-<div class="error-message {{ $class }}">
+<div class="error-message error-message--active {{ $class }}">
   {{ $message }}
 </div>
 @else
