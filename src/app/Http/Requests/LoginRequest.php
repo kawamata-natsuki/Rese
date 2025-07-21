@@ -24,8 +24,8 @@ class LoginRequest extends FormRequest
     {
         return [
             'email.required'    => 'メールアドレスを入力してください',
-            'email.email'       => 'メールアドレスは「ユーザー名@ドメイン」形式で入力してください',
-            'email.max' => 'メールアドレスは255文字以内で入力してください',
+            'email.email'       => 'メールアドレスの形式が正しくありません',
+            'email.max'         => 'メールアドレスは255文字以内で入力してください',
             'password.required' => 'パスワードを入力してください',
             'password.min'      => 'パスワードは8文字以上で入力してください',
             'password.max'      => 'パスワードは100文字以内で入力してください',

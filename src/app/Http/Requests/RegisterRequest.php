@@ -23,15 +23,15 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => '名前を入力してください',
-            'name.max'      => '名前は50文字以内で入力してください',
-            'email.required'       => 'メールアドレスを入力してください。',
-            'email.email'          => 'メールアドレスは「ユーザー名@ドメイン」形式で入力してください',
-            'email.max'            => 'メールアドレスは255文字以内で入力してください',
-            'email.unique'         => 'このメールアドレスは既に登録されています',
-            'password.required'    => 'パスワードを入力してください',
-            'password.min'         => 'パスワードは8文字以上で入力してください',
-            'password.max'         => 'パスワードは100文字以内で入力してください',
+            'name.required'         => '名前を入力してください',
+            'name.max'              => '名前は50文字以内で入力してください',
+            'email.required'        => 'メールアドレスを入力してください。',
+            'email.email'           => 'メールアドレスの形式が正しくありません',
+            'email.max'             => 'メールアドレスは255文字以内で入力してください',
+            'email.unique'          => 'このメールアドレスは既に登録されています',
+            'password.required'     => 'パスワードを入力してください',
+            'password.min'          => 'パスワードは8文字以上で入力してください',
+            'password.max'          => 'パスワードは100文字以内で入力してください',
         ];
     }
 
