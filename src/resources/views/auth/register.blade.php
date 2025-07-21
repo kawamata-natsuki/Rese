@@ -14,7 +14,7 @@
     </h1>
 
     <div class="register-page__content">
-      <form action="{{route('register')}}" method="" class="login-page__form" novalidate>
+      <form action="{{route('register')}}" method="post" class="login-page__form" novalidate>
         @csrf
 
         <div class="register-page__form-section">
@@ -27,8 +27,8 @@
               type="text" name="name" id="name"
               value="{{ old('name')  }}"
               placeholder="Username">
-            <x-error-message field="name" preserve />
           </div>
+          <x-error-message field="name" preserve />
 
           <!-- メールアドレス -->
           <div class="register-page__form-group">
@@ -39,8 +39,8 @@
               type="email" name="email" id="email"
               value="{{ old('email')  }}"
               placeholder="Email">
-            <x-error-message field="email" preserve />
           </div>
+          <x-error-message field="email" preserve />
 
           <!-- パスワード -->
           <div class="register-page__form-group">
@@ -50,8 +50,8 @@
             <input class="register-page__input"
               type="password" name="password" id="password"
               placeholder="Password">
-            <x-error-message field="password" preserve />
           </div>
+          <x-error-message field="password" preserve />
         </div>
 
         <!-- 登録ボタン -->
