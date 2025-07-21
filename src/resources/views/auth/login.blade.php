@@ -14,7 +14,7 @@
     </h1>
 
     <div class="login-page__content">
-      <form action="{{route('login')}}" method="" class="login-page__form" novalidate>
+      <form action="{{route('login')}}" method="post" class="login-page__form" novalidate>
         @csrf
 
         <div class="login-page__form-section">
