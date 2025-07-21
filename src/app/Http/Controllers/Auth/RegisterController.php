@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Fortify\CreateNewUser;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\RegisterRequest;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
+    // 会員登録画面表示
     public function showRegisterView()
     {
         return view('auth.register');
     }
 
-    public function store()
+    // 会員登録の処理
+    public function store(RegisterRequest $request, CreateNewUser $creator)
     {
-        // ユーザー登録処理
-    }
+        // ユーザー作成・メール認証のメール自動送信
+        event(new Registered($user = $creator->create($request->validated())));
 
-    public function thanks()
-    {
-        return view('auth.register-thanks');
+        // メール認証画面へリダイレクト
+        return redirect()->route('verification.notice');
     }
 }
