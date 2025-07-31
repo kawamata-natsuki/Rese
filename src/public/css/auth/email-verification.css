@@ -10,26 +10,6 @@
   align-items: center;
 }
 
-.verify-email-page__message {
-  font-weight: 700;
-  font-size: 24px;
-  text-align: center;
-  color: #000;
-}
-
-.verify-email-page__flash-message {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #e6ffed;
-  color: #0a662e;
-  border-left: 4px solid #2ecc71;
-  font-size: 14px;
-}
-
-.verify-email-page__flash-wrapper {
-  min-height: 60px;
-}
-
 .verify-email-page__form {
   margin-top: 50px;
 }
