@@ -30,7 +30,7 @@ class EmailVerificationController extends Controller
         }
 
         $request->user()->sendEmailVerificationNotification();
-        return back()->with('status', 'verification-link-sent');
+        return back()->with('success', '認証メールを再送信しました。メールをご確認ください。');
     }
 
     // メール認証済みか確認してリダイレクト
