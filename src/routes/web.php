@@ -54,8 +54,9 @@ Route::name('shop.')->middleware((['auth', 'verified']))->group(function () {
         ->name('index');
     Route::get('/shops/{shop}', [ShopController::class, 'show'])
         ->name('show');
-    Route::post('/shops/search', [SearchController::class, 'search'])
-        ->name('search');
+    // リアルタイム検索用
+    Route::get('/search/ajax', [SearchController::class, 'ajaxsearch'])
+        ->name('ajaxSearch');
 });
 
 Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(function () {
