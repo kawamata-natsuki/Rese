@@ -21,9 +21,30 @@
   @include('components.header')
   @endif
 
+  <!-- フラッシュメッセージ -->
+  @if (session('success') || session('error'))
+  <div class="flash-message
+    {{ session('success') ? 'flash-message--success' : 'flash-message--error' }}
+    is-visible">
+    {{ session('success') ?? session('error') }}
+  </div>
+  @endif
+
   <main>
     @yield('content')
   </main>
+
+  <script>
+    // フラッシュメッセージをフェードアウト
+    setTimeout(() => {
+      const flash = document.querySelector('.flash-message');
+      if (flash) {
+        flash.style.opacity = '0';
+        setTimeout(() => flash.remove(), 500);
+      }
+    }, 3000);
+  </script>
+
 </body>
 
 </html>

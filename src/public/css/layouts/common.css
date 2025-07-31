@@ -7,6 +7,30 @@
   margin-left: 40px;
 }
 
+/* フラッシュメッセージレイアウト */
+.flash-message {
+  min-height: 60px;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  margin: 20px auto;
+  padding: 10px 20px;
+  max-width: 800px;
+  border-radius: 4px;
+}
+
+.flash-message--success {
+  background-color: #e6ffed;
+  color: #0a662e;
+  border-left: 4px solid #2ecc71;
+}
+
+.flash-message--error {
+  background-color: #ffe6e6;
+  color: #b50000;
+  border-left: 4px solid #ff5e57;
+}
+
 /* アイコン */
 .error-message::before {
   content: none;
