@@ -33,6 +33,16 @@ class LoginController extends Controller
             RateLimiter::clear($this->throttlekey($request));
             // セッションID再生成
             $request->session()->regenerate();
+
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            // メール未認証の場合は、認証メールを再送
+            if (! $user->hasVerifiedEmail()) {
+                $user->sendEmailVerificationNotification();
+
+                return redirect()->route('verification.notice');
+            }
+
             return redirect()->route('shop.index')
                 ->with('success', 'ログインしました！');
         }
