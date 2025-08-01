@@ -1,5 +1,5 @@
 .shop-index-page {
-  padding: 40px 0 64px 0;
+  padding: 64px 0;
 }
 
 .shop-index-page__container {
@@ -10,7 +10,8 @@
 
 .shop-index-pages__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: center;
   gap: 24px;
 }
 
