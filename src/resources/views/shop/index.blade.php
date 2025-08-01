@@ -1,14 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
+@section('css')
+<link rel="stylesheet" href="{{ asset('css/components/search-form.css') }}">
+<link rel="stylesheet" href="{{ asset('css/shop/index.css') }}">
+@endsection
 
-<body>
-  <p>飲食店一覧ページ</p>
-</body>
+@section('title', '飲食店一覧')
 
-</html>
+@section('content')
+
+@endsection
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  function fetchShops() {
+    const keyword = $('#keyword').val();
+    const area = $('#area').val();
+    const genre = $('#genre').val();
+
+    $.ajax({
+      url: "{{ route('shop.search.ajax') }}",
+      type: 'GET',
+      data: {
+        keyword: keyword,
+        area: area,
+        genre: genre
+      },
+      success: function(shops) {
+        let html = '';
+        if (shops.length === 0) {
+          html = '<p>該当する店舗が見つかりませんでした。</p>';
+        } else {
+          const showMore = shops.length > 10;
+          const displayShops = showMore ? shops.slice(0, 10) : shops;
+
+          displayShops.forEach(shop => {
+            html += `
+              <div class="search-result__item">
+                <h3>${shop.name}</h3>
+                <p>エリア: ${shop.area} / ジャンル: ${shop.genre}</p>
+                <a href="/shops/${shop.id}">詳細を見る</a>
+              </div>
+            `;
+          });
+
+          if (showMore) {
+            html += `<a href="{{ route('shop.search') }}?keyword=${keyword}&area=${area}&genre=${genre}" class="search-result__more">もっと見る</a>`;
+          }
+        }
+
+        $('#search-results').html(html);
+      },
+      error: function() {
+        $('#search-results').html('<p>検索中にエラーが発生しました。</p>');
+      }
+    });
+  }
+
+  $(document).ready(function() {
+    $('#keyword').on('input', fetchShops);
+    $('#area, #genre').on('change', fetchShops);
+  });
+</script>
+@endpush
