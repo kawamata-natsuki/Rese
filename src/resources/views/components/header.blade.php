@@ -25,7 +25,8 @@
     </nav>
   </div>
 
-  @if (Request::is('/'))
-  @include('components.search')
+  @if (url()->current() === route('shop.index'))
+  @include('components.search-form')
   @endif
+
 </header>
