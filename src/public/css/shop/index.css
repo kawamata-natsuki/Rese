@@ -1,0 +1,15 @@
+.shop-index-page {
+  padding: 40px 0 64px 0;
+}
+
+.shop-index-page__container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.shop-index-pages__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}

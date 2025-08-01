@@ -1,16 +1,30 @@
 @extends('layouts.app')
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/components/search-form.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/shop-card.css') }}">
 <link rel="stylesheet" href="{{ asset('css/shop/index.css') }}">
 @endsection
 
 @section('title', '飲食店一覧')
 
 @section('content')
+<div class="shop-index-page">
+  <div class="shop-index-page__container">
+
+    <div class="shop-index-pages__grid">
+      @foreach ($shops as $shop)
+      <x-shop-card :shop="$shop" />
+      @endforeach
+    </div>
+
+  </div>
+
+</div>
+
+
 
 @endsection
-
+<!--  
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -64,3 +78,4 @@
   });
 </script>
 @endpush
+-->
