@@ -46,7 +46,7 @@
 
 .shop-card__name {
   font-size: 1.4rem;
-  font-weight: bold;
+  font-weight: 700;
   margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
@@ -61,7 +61,7 @@
   gap: 12px;
 }
 
-/* 詳しくみるボタン & いいね */
+/* 詳しくみるボタン & お気に入り登録 */
 .shop-card__action-wrapper {
   display: flex;
   justify-content: space-between;
