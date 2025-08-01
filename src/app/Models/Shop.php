@@ -38,8 +38,8 @@ class Shop extends Model
         return $this->hasMany(Reservation::class);
     }
 
-    public function favorites()
+    public function likedUsers()
     {
-        return $this->hasMany(Favorite::class);
+        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
     }
 }
