@@ -11,23 +11,19 @@
 <div class="shop-index-page">
   <div class="shop-index-page__container">
 
-    <div class="shop-index-pages__grid">
-      @foreach ($shops as $shop)
-      <x-shop-card :shop="$shop" />
-      @endforeach
+    <div id="search-results" class="shop-index-page__results">
+      @include('components.shop-cards', ['shops' => $shops])
     </div>
 
   </div>
 
 </div>
-
-
-
 @endsection
-<!--  
+
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+  // 検索実行関数
   function fetchShops() {
     const keyword = $('#keyword').val();
     const area = $('#area').val();
@@ -37,45 +33,33 @@
       url: "{{ route('shop.search.ajax') }}",
       type: 'GET',
       data: {
-        keyword: keyword,
-        area: area,
-        genre: genre
+        keyword,
+        area,
+        genre
       },
-      success: function(shops) {
-        let html = '';
-        if (shops.length === 0) {
-          html = '<p>該当する店舗が見つかりませんでした。</p>';
-        } else {
-          const showMore = shops.length > 10;
-          const displayShops = showMore ? shops.slice(0, 10) : shops;
-
-          displayShops.forEach(shop => {
-            html += `
-              <div class="search-result__item">
-                <h3>${shop.name}</h3>
-                <p>エリア: ${shop.area} / ジャンル: ${shop.genre}</p>
-                <a href="/shops/${shop.id}">詳細を見る</a>
-              </div>
-            `;
-          });
-
-          if (showMore) {
-            html += `<a href="{{ route('shop.search') }}?keyword=${keyword}&area=${area}&genre=${genre}" class="search-result__more">もっと見る</a>`;
-          }
-        }
-
-        $('#search-results').html(html);
-      },
-      error: function() {
-        $('#search-results').html('<p>検索中にエラーが発生しました。</p>');
+      success: function(response) {
+        $('#search-results').html(response.html);
       }
     });
   }
 
+  // イベント登録
   $(document).ready(function() {
     $('#keyword').on('input', fetchShops);
     $('#area, #genre').on('change', fetchShops);
+
+    // Enterキー無効化
+    $('#search-form').on('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+      }
+    });
+
+    // フォーム送信自体も無効化
+    $('#search-form').on('submit', function(e) {
+      e.preventDefault();
+      fetchShops();
+    });
   });
 </script>
 @endpush
--->
