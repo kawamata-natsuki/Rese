@@ -74,13 +74,9 @@ Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(fu
             ->name('destroy');
     });
 
-    // お気に入り登録・解除
-    Route::prefix('favorites')->name('favorites.')->group(function () {
-        Route::post('/', [FavoriteController::class, 'store'])
-            ->name('store');
-        Route::delete('/{shop}', [FavoriteController::class, 'destroy'])
-            ->name('destroy');
-    });
+    // いいね機能
+    Route::post('/favorites', [FavoriteController::class, 'toggle'])
+        ->name('favorites.toggle');
 
     // レビュー表示・投稿・スキップ
     Route::prefix('reviews')->name('reviews.')->group(function () {
