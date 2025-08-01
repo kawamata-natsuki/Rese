@@ -7,13 +7,20 @@ use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
 {
-    public function store()
+    public function toggle(Request $request)
     {
-        //御気に入り登録処理
-    }
+        /** @var \App\Models\User $user */
+        $user   = auth()->user();
+        $shopId = $request->input('shop_id');
 
-    public function destroy()
-    {
-        // お気に入り解除処理
+        $favorite = $user->favorites()->where('shop_id', $shopId);
+
+        if ($favorite->existst()) {
+            // いいね済み → 解除
+            $favorite->delete();
+        } else {
+            // いいね未 → 登録
+            $user->favorites()->create(['shop_id' => $shopId]);
+        }
     }
 }
