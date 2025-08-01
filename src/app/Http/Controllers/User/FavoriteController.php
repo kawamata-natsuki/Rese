@@ -13,14 +13,16 @@ class FavoriteController extends Controller
         $user   = auth()->user();
         $shopId = $request->input('shop_id');
 
-        $favorite = $user->favorites()->where('shop_id', $shopId);
+        $isFavorited = $user->favoriteShops()->where('shop_id', $shopId)->exists();
 
-        if ($favorite->existst()) {
+        if ($isFavorited) {
             // いいね済み → 解除
-            $favorite->delete();
+            $user->favoriteShops()->detach($shopId);
         } else {
             // いいね未 → 登録
-            $user->favorites()->create(['shop_id' => $shopId]);
+            $user->favoriteShops()->attach($shopId);
         }
+
+        return back();
     }
 }
