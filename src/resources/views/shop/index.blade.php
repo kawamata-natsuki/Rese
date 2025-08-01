@@ -43,6 +43,14 @@
     });
   }
 
+  // リセット処理
+  $('#reset-button').on('click', function() {
+    $('#area').val('all');
+    $('#genre').val('all');
+    $('#keyword').val('');
+    fetchShops();
+  });
+
   // イベント登録
   $(document).ready(function() {
     $('#keyword').on('input', fetchShops);
