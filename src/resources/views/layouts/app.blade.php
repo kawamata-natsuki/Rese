@@ -11,7 +11,7 @@
 
   <!-- components -->
   <link rel="stylesheet" href="{{ asset('css/components/header.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/components/search-form') }}">
+  <link rel="stylesheet" href="{{ asset('css/components/search-form.css') }}">
 
   <link rel="stylesheet" href="{{ asset('css/layouts/app.css') }}">
   <link rel="stylesheet" href="{{ asset('css/layouts/common.css') }}">
