@@ -21,7 +21,7 @@
   position: relative;
 }
 
-.search-form__group:not(:first-child)::before {
+.search-form__group:not(:first-child):not(:last-child)::before {
   content: "";
   display: block;
   width: 1px;
@@ -44,6 +44,16 @@
   flex: 2;
   height: 100%;
   padding: 0 4px 0 8px;
+}
+
+.search-form__group--reset {
+  flex: 0.5;
+  height: 100%;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 /* セレクトボックス＋アイコン */
@@ -98,4 +108,25 @@
   transform: translateY(-50%);
   pointer-events: none;
   color: #888;
+}
+
+/* リセットボタン */
+.search-form__reset-button {
+  height: 32px;
+  padding: 0 10px;
+  font-size: 0.8rem;
+  border: none;
+  background-color: #999;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-form__reset-button:hover {
+  background-color: #888;
 }
