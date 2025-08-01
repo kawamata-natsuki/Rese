@@ -24,49 +24,17 @@ class SearchController extends Controller
 
         // 選択されたエリアと一致する店舗を抽出
         if ($area && $area !== 'all') {
-            $query->where('area', $area);
+            $query->where('area_id', $area);
         }
 
         // 選択されたジャンルと一致する店舗を抽出
         if ($genre && $genre !== 'all') {
-            $query->where('genre', $genre);
+            $query->where('genre_id', $genre);
         }
 
-        // 検索条件に合った店舗を最大10件まで取得
-        // 最後の1件は「さらに表示」UI用 
-        $shops = $query->limit(11)->get();
+        $shops = $query->get();
 
-        return response()->json($shops);
-    }
-
-    // 検索結果ページ表示
-    public function index(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        $area    = $request->input('area');
-        $genre   = $request->input('genre');
-
-        $query = Shop::query();
-
-        if ($keyword) {
-            $query->where('name', 'like', "%{$keyword}%");
-        }
-
-        if ($area && $area !== 'all') {
-            $query->where('area', $area);
-        }
-
-        if ($genre && $genre !== 'all') {
-            $query->where('genre', $genre);
-        }
-
-        $shops = $query->paginate(20)->withQueryString();
-
-        return view('shop.search', compact(
-            'shops',
-            'keyword',
-            'area',
-            'genre'
-        ));
+        $html = view('components.shop-cards', compact('shops'))->render();
+        return response()->json(['html' => $html]);
     }
 }
