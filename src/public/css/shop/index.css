@@ -13,3 +13,26 @@
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
 }
+
+/* ==========================
+   メディアクエリ
+========================== */
+@media (max-width: 1399px) {
+  .shop-index-pages__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* タブレット（768〜1023px）→ 2列 */
+@media (max-width: 1023px) {
+  .shop-index-pages__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* スマホ（〜767px）→ 1列 */
+@media (max-width: 767px) {
+  .shop-index-pages__grid {
+    grid-template-columns: 1fr;
+  }
+}
