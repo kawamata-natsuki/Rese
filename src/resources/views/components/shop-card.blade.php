@@ -1,5 +1,6 @@
 @props(['shop'])
 
+<!-- 店舗情報を1件ずつ表示するカード -->
 <div class="shop-card">
   <!-- 店舗画像 -->
   <div class="shop-card__image-wrapper">
