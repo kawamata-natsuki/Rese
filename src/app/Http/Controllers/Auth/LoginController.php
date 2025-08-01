@@ -43,8 +43,7 @@ class LoginController extends Controller
                 return redirect()->route('verification.notice');
             }
 
-            return redirect()->route('shop.index')
-                ->with('success', 'ログインしました！');
+            return redirect()->route('shop.index');
         }
 
         // 失敗した場合
