@@ -1,0 +1,108 @@
+.shop-card {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.shop-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ==========================
+   店舗画像
+========================== */
+.shop-card__image-wrapper {
+  display: block;
+  width: 100%;
+  height: 50%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.shop-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ==========================
+   店舗情報
+========================== */
+.shop-card__info-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 50%;
+  padding: 16px;
+}
+
+.shop-card__name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shop-card__tags {
+  display: flex;
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+/* 詳しくみるボタン & いいね */
+.shop-card__action-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+/* 詳しくみるボタン */
+.shop-card__button {
+  width: auto;
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 4px;
+  color: #ffffff;
+  background-color: #2962ff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.shop-card__button:hover {
+  background-color: #0039cb;
+}
+
+/* いいねボタン */
+.favorite-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.favorite-icon {
+  font-size: 2rem;
+  color: #ccc;
+  transition: color 0.3s ease;
+}
+
+.favorite-icon--active {
+  color: #FF5555;
+}
+
+.favorite-button:hover .favorite-icon:not(.favorite-icon--active) {
+  color: #ff8888;
+  transform: scale(1.1);
+}
