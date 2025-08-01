@@ -1,5 +1,5 @@
 <header class="header">
-  <div class="header__inner">
+  <div class="header__nav">
     <!-- ハンバーガーメニュー -->
     <input type="checkbox" id="menu-toggle" class="header__menu-toggle" hidden>
     <label for="menu-toggle" class="header__hamburger">
@@ -28,5 +28,4 @@
   @if (url()->current() === route('shop.index'))
   @include('components.search-form')
   @endif
-
 </header>
