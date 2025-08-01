@@ -55,8 +55,10 @@ Route::name('shop.')->middleware((['auth', 'verified']))->group(function () {
     Route::get('/shops/{shop}', [ShopController::class, 'show'])
         ->name('show');
     // リアルタイム検索用
-    Route::get('/search/ajax', [SearchController::class, 'ajaxsearch'])
-        ->name('ajaxSearch');
+    Route::get('shops/search/ajax', [SearchController::class, 'searchAjax'])
+        ->name('search.ajax');
+    // 検索結果ページ遷移用
+    Route::get('/shops/search', [SearchController::class, 'index'])->name('search');
 });
 
 Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(function () {
