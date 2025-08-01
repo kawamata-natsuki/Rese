@@ -14,10 +14,10 @@
 
     <!-- エリア&ジャンル -->
     <div class="shop-card__tags">
-      <span class="shop-card__area">
+      <span class="shop-card__tag is-area">
         # {{ $shop->area->name }}
       </span>
-      <span class="shop-card__genre">
+      <span class="shop-card__tag is-genre">
         # {{ $shop->genre->name }}
       </span>
     </div>
