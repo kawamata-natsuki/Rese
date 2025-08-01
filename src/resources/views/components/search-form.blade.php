@@ -3,6 +3,7 @@
 
   <form id="search-form" class="search-form">
 
+    <!-- エリア検索 -->
     <div class="search-form__group   search-form__group--select">
       <div class="search-form__select-wrapper">
         <select name="area" id="area" class="search-form__select">
@@ -17,6 +18,7 @@
       </div>
     </div>
 
+    <!-- ジャンル検索 -->
     <div class="search-form__group search-form__group--select">
       <div class="search-form__select-wrapper">
         <select name="genre" id="genre" class="search-form__select">
@@ -33,6 +35,7 @@
       </div>
     </div>
 
+    <!-- キーワード検索 -->
     <div class="search-form__group search-form__group--input">
       <div class="search-form__input-wrapper">
         <span class="search-form__search-icon">
@@ -46,6 +49,13 @@
           placeholder="Search..."
           class="search-form__input">
       </div>
+    </div>
+
+    <!-- リセットボタン -->
+    <div class="search-form__group search-form__group--reset">
+      <button type="button" id="reset-button" class="search-form__reset-button">
+        リセット
+      </button>
     </div>
 
   </form>
