@@ -15,6 +15,8 @@ return new class extends Migration
             $table->unsignedBigInteger('genre_id')->nullable();
             $table->text('description');
             $table->string('image_url');
+            $table->time('opening_time');
+            $table->time('closing_time');
             $table->softDeletes();
             $table->timestamps();
 
