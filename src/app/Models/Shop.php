@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use PhpParser\Node\Expr\Cast;
 
 class Shop extends Model
 {
@@ -15,6 +16,13 @@ class Shop extends Model
         'genre_id',
         'description',
         'image_url',
+        'opening_time',
+        'closing_time',
+    ];
+
+    protected $casts = [
+        'opening_time' => 'datetime:H:i',
+        'closing_time' => 'datetime:H:i',
     ];
 
     // リレーション定義
