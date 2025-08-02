@@ -24,7 +24,7 @@
         <div class="login-page__form-section">
           <!-- メールアドレス -->
           <div class="login-page__form-group">
-            <label class="login-page__label">
+            <label for="email" class="login-page__label">
               <img class="login-page__icon" src="{{ asset('images/icons/mail.svg') }}" alt="メール">
             </label>
             <input class="login-page__input"
@@ -36,7 +36,7 @@
 
           <!-- パスワード -->
           <div class="login-page__form-group">
-            <label for="" class="login-page__label">
+            <label for="password" class="login-page__label">
               <img class="login-page__icon" src="{{ asset('images/icons/password.svg') }}" alt="パスワード">
             </label>
             <input class="login-page__input"
