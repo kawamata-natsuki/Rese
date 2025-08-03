@@ -22,7 +22,7 @@ class Reservation extends Model
 
     protected $casts = [
         'reservation_date'      => 'date',
-        'reservation_time'      => 'time',
+        'reservation_time'      => 'datetime',
         'visited_at'            => 'datetime',
         'reservation_status'    => ReservationStatus::class,
     ];
