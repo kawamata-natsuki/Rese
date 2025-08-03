@@ -25,7 +25,7 @@
           <!-- メールアドレス -->
           <div class="login-page__form-group">
             <label for="email" class="login-page__label">
-              <img class="login-page__icon" src="{{ asset('images/icons/mail.svg') }}" alt="メール">
+              <i class="fas fa-envelope login-page__icon"></i>
             </label>
             <input class="login-page__input"
               type="email" name="email" id="email"
@@ -37,7 +37,7 @@
           <!-- パスワード -->
           <div class="login-page__form-group">
             <label for="password" class="login-page__label">
-              <img class="login-page__icon" src="{{ asset('images/icons/password.svg') }}" alt="パスワード">
+              <i class="fas fa-lock login-page__icon"></i>
             </label>
             <input class="login-page__input"
               type="password" name="password" id="password"

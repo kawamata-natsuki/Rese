@@ -21,7 +21,7 @@
           <!-- 名前 -->
           <div class="register-page__form-group">
             <label for="name" class="register-page__label">
-              <img class="register-page__icon" src="{{ asset('images/icons/user.svg') }}" alt="名前">
+              <i class="fas fa-user register-page__icon"></i>
             </label>
             <input class="register-page__input"
               type="text" name="name" id="name"
@@ -33,7 +33,7 @@
           <!-- メールアドレス -->
           <div class="register-page__form-group">
             <label for="email" class="register-page__label">
-              <img class="register-page__icon" src="{{ asset('images/icons/mail.svg') }}" alt="メール">
+              <i class="fas fa-envelope register-page__icon"></i>
             </label>
             <input class="register-page__input"
               type="email" name="email" id="email"
@@ -45,7 +45,7 @@
           <!-- パスワード -->
           <div class="register-page__form-group">
             <label for="password" class="register-page__label">
-              <img class="register-page__icon" src="{{ asset('images/icons/password.svg') }}" alt="パスワード">
+              <i class="fas fa-lock register-page__icon"></i>
             </label>
             <input class="register-page__input"
               type="password" name="password" id="password"

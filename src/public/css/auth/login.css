@@ -51,7 +51,12 @@
 .login-page__icon {
   width: 32px;
   height: 32px;
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #333;
+  margin-right: 8px;
 }
 
 .login-page__input {
