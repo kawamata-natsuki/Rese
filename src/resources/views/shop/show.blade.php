@@ -60,53 +60,59 @@
               <label for="date" class="reservation-form__label">
                 <i class="fas fa-calendar-day reservation-form__icon"></i>
               </label>
-              <input
-                type="text"
-                name="date"
-                id="date"
-                value="{{ old('date', '') }}"
-                class="reservation-form__input no-default-calendar"
-                placeholder="日付を選択してください">
+              <div class="reservation-form__input-block">
+                <input
+                  type="text"
+                  name="date"
+                  id="date"
+                  value="{{ old('date', '') }}"
+                  class="reservation-form__input no-default-calendar"
+                  placeholder="日付を選択してください">
+                <x-error-message field="date" />
+              </div>
             </div>
-            <x-error-message field="date" class="error-message--offset" />
 
             <!-- 時間選択 -->
             <div class="reservation-form__field">
               <label for="time" class="reservation-form__label">
                 <i class="far fa-clock reservation-form__icon"></i>
               </label>
-              <select name="time" id="time"
-                class="reservation-form__input {{ old('time') ? '' : 'is-placeholder' }}">
-                <option value="" hidden {{ old('time') ? '' : 'selected' }} class="is-placeholder">
-                  時刻を選択してください
-                </option>
-                @foreach ($timeSlots as $slot)
-                <option value="{{ $slot }}" {{ old('time') === $slot ? 'selected' : '' }}>
-                  {{ $slot }}
-                </option>
-                @endforeach
-              </select>
+              <div class="reservation-form__input-block">
+                <select name="time" id="time"
+                  class="reservation-form__input {{ old('time') ? '' : 'is-placeholder' }}">
+                  <option value="" hidden {{ old('time') ? '' : 'selected' }} class="is-placeholder">
+                    時刻を選択してください
+                  </option>
+                  @foreach ($timeSlots as $slot)
+                  <option value="{{ $slot }}" {{ old('time') === $slot ? 'selected' : '' }}>
+                    {{ $slot }}
+                  </option>
+                  @endforeach
+                </select>
+                <x-error-message field="time" class="error-message--offset" />
+              </div>
             </div>
-            <x-error-message field="time" class="error-message--offset" />
 
             <!-- 人数選択 -->
             <div class="reservation-form__field">
               <label for="number" class="reservation-form__label">
                 <i class="fas fa-user reservation-form__icon"></i>
               </label>
-              <select name="number" id="number"
-                class="reservation-form__input {{ old('number') ? '' : 'is-placeholder' }}">
-                <option value="" hidden {{ old('number') ? '' : 'selected' }} class="is-placeholder">
-                  人数を選択してください
-                </option>
-                @foreach ($numberSlots as $num)
-                <option value="{{ $num }}" {{ old('number') === $slot ? 'selected' : '' }}>
-                  {{ $num }}人
-                </option>
-                @endforeach
-              </select>
+              <div class="reservation-form__input-block">
+                <select name="number" id="number"
+                  class="reservation-form__input {{ old('number') ? '' : 'is-placeholder' }}">
+                  <option value="" hidden {{ old('number') ? '' : 'selected' }} class="is-placeholder">
+                    人数を選択してください
+                  </option>
+                  @foreach ($numberSlots as $num)
+                  <option value="{{ $num }}" {{ old('number') === $slot ? 'selected' : '' }}>
+                    {{ $num }}人
+                  </option>
+                  @endforeach
+                </select>
+                <x-error-message field="number" class="error-message--offset" />
+              </div>
             </div>
-            <x-error-message field="number" class="error-message--offset" />
 
           </div>
           <!-- 予約するボタン -->
@@ -124,6 +130,8 @@
   document.addEventListener('DOMContentLoaded', function() {
     flatpickrInstance = flatpickr("#date", {
       dateFormat: "Y-m-d",
+      altInput: true,
+      altFormat: "Y年m月d日", // 表示用フォーマット
       locale: flatpickr.l10ns.ja,
       defaultDate: @json(old('date') ?? null),
       disableMobile: true
