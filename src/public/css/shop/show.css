@@ -11,7 +11,7 @@
 .shop-show-page__body {
   display: flex;
   align-items: flex-start;
-  gap: 32px;
+  gap: 72px;
 }
 
 /* ==========================
@@ -119,21 +119,26 @@
 .reservation-form__fields {
   display: flex;
   flex-direction: column;
-  padding: 36px 36px 16px 36px;
+  padding: 40px 120px;
   margin-top: 24px;
 }
 
 .reservation-form__field {
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 24px;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.reservation-form__input-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* 予約フォームアイコン */
 .reservation-form__icon {
-  width: 32px;
-  height: 32px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,7 +148,7 @@
 }
 
 .reservation-form__input {
-  width: 65%;
+  width: 100%;
   padding: 10px 8px 4px 8px;
   border-bottom: 1px solid #333;
   font-size: 1.3rem;
@@ -171,7 +176,6 @@ select.reservation-form__input option.is-placeholder {
 .reservation-form__button-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 36px;
   margin-bottom: 60px;
 }
 
@@ -192,7 +196,7 @@ select.reservation-form__input option.is-placeholder {
 }
 
 /* エラーメッセージカスタム */
-.error-message--offset {
-  margin-top: 8px;
-  margin-left: 64px;
+.error-message {
+  font-size: 0.85rem;
+  margin-left: 0;
 }
