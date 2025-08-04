@@ -1,0 +1,63 @@
+.done-page {
+  max-width: 1200px;
+  height: calc(100vh - 80px);
+  top: -80px;
+  margin: 0 auto;
+  padding: 0 16px;
+  padding-bottom: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.done-page__card {
+  background: #ffffff;
+  padding: 40px 32px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+}
+
+.done-page__title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.done-page__message {
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+
+.done-page__button-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.done-page__button {
+  display: inline-block;
+  background-color: #2962ff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: background-color 0.2s;
+}
+
+.done-page__button:hover {
+  background-color: #0039cb;
+}
+
+.done-page__button--secondary {
+  background-color: #757575;
+}
+
+.done-page__button--secondary:hover {
+  background-color: #424242;
+}
