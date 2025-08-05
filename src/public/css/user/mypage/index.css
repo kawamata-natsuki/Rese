@@ -1,0 +1,66 @@
+.mypage {
+  padding: 64px 0;
+}
+
+.mypage__container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ページ上部ユーザーネーム表示 */
+.mypage__header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.mypage__header-name {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* 予約状況＋お気に入り店舗 */
+.mypage__body {
+  display: flex;
+  gap: 60px;
+}
+
+/* 左側：予約状況 */
+.mypage__reservations {
+  flex-basis: 300px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.mypage__reservations-heading {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.mypage__reservations-item {
+  margin-top: 24px;
+}
+
+/* 右側：お気に入り店舗 */
+.mypage__favorites {
+  flex: 1;
+}
+
+.mypage__favorites-heading {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.mypage__favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 24px 24px 24px 0;
+  gap: 24px;
+}
