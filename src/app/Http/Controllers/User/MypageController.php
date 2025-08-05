@@ -12,8 +12,19 @@ class MypageController extends Controller
     {
         $user = auth()->user();
 
-        // ユーザーの予約とお気に入りを取得
-        $reservations = $user->reservations()->with('shop.area', 'shop.genre')->get();
+        // 予約を日付＋時間の昇順で取得し、display_number を付与
+        $reservations = $user->reservations()
+            ->with('shop.area', 'shop.genre')
+            ->orderBy('reservation_date')
+            ->orderBy('reservation_time')
+            ->get()
+            ->values()
+            ->map(function ($reservation, $index) {
+                $reservation->display_number = $index + 1;
+                return $reservation;
+            });
+
+        // ユーザーのお気に入り店舗取得
         $favoriteShops = $user->favoriteShops;
 
         return view('user.mypage.index', [
