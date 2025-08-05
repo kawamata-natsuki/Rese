@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('shop_id');
-            $table->softDeletes();
             $table->timestamps();
 
             // 複合ユニークキー
