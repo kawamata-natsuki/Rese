@@ -15,6 +15,14 @@ RUN curl -sS https://getcomposer.org/installer | php && \
   mv composer.phar /usr/local/bin/composer && \
   composer self-update
 
+# GD extension install
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd
+
 # ユーザーとグループを作成
 RUN groupadd -g ${GROUP_ID} appgroup || true && \
     useradd -m -u ${USER_ID} -g appgroup appuser || true
