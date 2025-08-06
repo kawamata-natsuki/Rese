@@ -70,6 +70,8 @@ Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(fu
             ->name('update');
         Route::delete('/{reservation}', [ReservationController::class, 'destroy'])
             ->name('destroy');
+        Route::get('/{reservation}/qr', [ReservationController::class, 'qr'])
+            ->name('qr');
     });
 
     // いいね機能
