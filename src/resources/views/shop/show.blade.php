@@ -132,7 +132,7 @@
     flatpickrInstance = flatpickr("#date", {
       dateFormat: "Y-m-d",
       altInput: true,
-      altFormat: "Y年m月d日", // 表示用フォーマット
+      altFormat: "Y年n月j日（D）", // 表示用フォーマット
       locale: flatpickr.l10ns.ja,
       defaultDate: @json(old('date') ?? null),
       disableMobile: true
