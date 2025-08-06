@@ -100,7 +100,7 @@
         <div id="reservation-qr-modal" class="modal" style="display: none;">
           <div class="modal-content">
             <p>QRコードを提示してください</p>
-            <img id="reservation-qr-image" src="" alt="QRコード" style="width: 200px; height: 200px;">
+            <img id="reservation-qr-image" src="/user/reservations/8/qr" alt="QRコード" style="width: 200px; height: 200px;">
             <button type="button" class="modal-close-button">閉じる</button>
           </div>
         </div>
@@ -134,6 +134,15 @@
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
 <script>
+  function showQrModal(el) {
+    const imageUrl = el.dataset.qr;
+    const modal = document.getElementById('reservation-qr-modal');
+    const qrImage = document.getElementById('reservation-qr-image');
+
+    qrImage.src = imageUrl;
+    modal.style.display = 'flex';
+  }
+
   window.addEventListener('DOMContentLoaded', () => {
     // Choices.js 初期化（時間セレクト）
     const dateChoices = new Choices('#edit-date-select', {
@@ -256,6 +265,7 @@
     const qrButtons = document.querySelectorAll('.reservation-qr-button');
     const qrModal = document.getElementById('reservation-qr-modal');
     const qrImage = document.getElementById('reservation-qr-image');
+
     qrButtons.forEach(button => {
       button.addEventListener('click', () => {
         qrImage.src = button.dataset.qrImageUrl;
