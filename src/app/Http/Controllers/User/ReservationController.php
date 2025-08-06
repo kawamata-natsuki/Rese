@@ -7,10 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ReservationRequest;
 use App\Models\Reservation;
 use App\Models\Shop;
-use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\Image\SvgImageBackEnd;
-use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Writer;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
 
 class ReservationController extends Controller
 {
@@ -87,14 +85,15 @@ class ReservationController extends Controller
             . "日付: {$reservation->reservation_date->format('Y-m-d')}\n"
             . "時間: {$reservation->reservation_time->format('H:i')}";
 
-        $renderer = new ImageRenderer(
-            new RendererStyle(200),
-            new SvgImageBackEnd()
+        $builder = new Builder(
+            writer: new PngWriter(),
+            data: $qrContent,
+            size: 200
         );
 
-        $writer = new Writer($renderer);
-        $svg = $writer->writeString($qrContent);
+        $result = $builder->build();
 
-        return response($svg)->header('Content-Type', 'image/svg+xml');
+        return response($result->getString())
+            ->header('Content-Type', $result->getMimeType());
     }
 }
