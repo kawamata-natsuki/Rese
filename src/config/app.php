@@ -185,4 +185,7 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    // 追加
+    'qr_base_url' => env('QR_BASE_URL', env('APP_URL')),
+
 ];
