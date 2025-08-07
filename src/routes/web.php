@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\EmailVerificationController;
+use App\Http\Controllers\Shop\CheckinController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Shop\SearchController;
@@ -92,3 +93,10 @@ Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(fu
     Route::get('/mypage', [MypageController::class, 'index'])
         ->name('mypage.index');
 });
+
+// ===============================
+// 店舗代表者ユーザー機能
+// ===============================
+Route::get('/shop/checkin', [CheckinController::class, 'checkin'])
+    ->middleware(['auth', 'can:shop-access'])
+    ->name('shop.checkin');
