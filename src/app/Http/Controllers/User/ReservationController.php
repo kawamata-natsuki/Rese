@@ -9,23 +9,13 @@ use App\Models\Reservation;
 use App\Models\Shop;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Writer\PngWriter;
+use Illuminate\Support\Facades\URL;
 
 class ReservationController extends Controller
 {
     public function store(ReservationRequest $request)
     {
         $shop = Shop::findOrFail($request->shop_id);
-
-        $opening = $shop->opening_time->copy();
-        $closing = $shop->closing_time;
-
-        $timeSlots = [];
-        while ($opening < $closing) {
-            $timeSlots[] = $opening->format('H:i');
-            $opening->addMinutes(30);
-        }
-
-        $numberSlots = range(1, 10);
 
         $validated = $request->validated();
         Reservation::create([
@@ -44,9 +34,9 @@ class ReservationController extends Controller
         return view('user.reservations.done');
     }
 
+    // 予約変更処理
     public function update(ReservationRequest $request, Reservation $reservation)
     {
-        // 予約変更処理
         if ($reservation->user_id !== auth()->id()) {
             abort(403);
         }
@@ -62,6 +52,7 @@ class ReservationController extends Controller
         return redirect()->back()->with('success', '予約を変更しました');
     }
 
+    // 予約キャンセル処理
     public function destroy(Reservation $reservation)
     {
         if ($reservation->user_id !== auth()->id()) {
@@ -75,15 +66,24 @@ class ReservationController extends Controller
         return redirect()->back()->with('success', '予約をキャンセルしました');
     }
 
+    // QRコード生成・表示処理
     public function qr(Reservation $reservation)
     {
         if ($reservation->user_id !== auth()->id()) {
             abort(403);
         }
 
-        $qrContent = "予約番号: {$reservation->id}\n"
-            . "日付: {$reservation->reservation_date->format('Y-m-d')}\n"
-            . "時間: {$reservation->reservation_time->format('H:i')}";
+        $baseUrl = config('app.qr_base_url');
+
+        $signatureUrl = URL::signedRoute(
+            'shop.checkin',
+            ['reservation_id' => $reservation->id],
+            now()->addMinutes(5)
+        );
+
+        $signature = parse_url($signatureUrl, PHP_URL_QUERY);
+
+        $qrContent = $baseUrl . '/shop/checkin?' . $signature;
 
         $builder = new Builder(
             writer: new PngWriter(),
