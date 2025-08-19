@@ -30,23 +30,43 @@
 
         {{-- 今後の予約 --}}
         @if ($upcomingReservations->isEmpty())
-        <p class="mypage__reservations-empty">現在、予約はありません。</p>
+        <div class="mypage__reservations-item">
+          <div class="reservation-card reservation-card--empty">
+            <div class="reservation-card__header reservation-card__header--empty">
+              <i class="far fa-calendar-minus reservation-card__icon"></i>
+              <p class="reservation-card__title">予約はありません</p>
+            </div>
+            <div class="reservation-card__content">
+              <p class="reservation-card__item">新しい予約をしてみましょう！</p>
+              <a href="{{ route('shop.index') }}" class="reservation-card__cta">店舗一覧へ</a>
+            </div>
+          </div>
+        </div>
         @else
-        @foreach($upcomingReservations as $reservation)
+        @foreach ($upcomingReservations as $reservation)
         <div class="mypage__reservations-item">
           <x-reservation-card :reservation="$reservation" />
         </div>
         @endforeach
         @endif
 
-        {{-- 過去の予約 --}}
+        {{-- 過去の予約（折りたたみ） --}}
         @if ($pastReservations->isNotEmpty())
-        <span class="mypage__reservations-heading" style="margin-top:24px;">過去の予約</span>
-        @foreach($pastReservations as $reservation)
-        <div class="mypage__reservations-item">
-          <x-reservation-card :reservation="$reservation" :readonly="true" />
-        </div>
-        @endforeach
+        <details id="past-reservations" class="collapsible" {{ $upcomingReservations->isEmpty() ? 'open' : '' }}>
+          <summary class="collapsible__summary" aria-label="過去の予約を開閉">
+            <span class="collapsible__title">過去の予約</span>
+            <span class="collapsible__count">{{ $pastReservations->count() }}件</span>
+            <i class="fas fa-chevron-down collapsible__chevron" aria-hidden="true"></i>
+          </summary>
+
+          <div class="collapsible__content">
+            @foreach($pastReservations as $reservation)
+            <div class="mypage__reservations-item">
+              <x-reservation-card :reservation="$reservation" :readonly="true" />
+            </div>
+            @endforeach
+          </div>
+        </details>
         @endif
 
         <!-- 予約変更モーダル -->

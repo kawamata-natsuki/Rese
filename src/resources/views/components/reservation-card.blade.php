@@ -8,9 +8,17 @@ $isPast = $startsAt->isPast();
 @endphp
 
 <!-- 予約状況を1件ずつ表示するカード -->
-<div class="reservation-card">
+<div class="reservation-card
+  @if($isPast) reservation-card--past
+  @elseif($reservation->reservation_date->isToday()) reservation-card--today
+  @else reservation-card--upcoming
+  @endif">
   <div class="reservation-card__header">
-    <i class="far fa-clock reservation-card__icon"></i>
+    <i class="
+  @if($isPast) fas fa-history
+  @elseif($reservation->reservation_date->isToday()) fas fa-calendar-day
+  @else far fa-clock
+  @endif reservation-card__icon"></i>
     <p class="reservation-card__title">
       @if($isPast)
       <span class="badge badge--muted">完了</span>

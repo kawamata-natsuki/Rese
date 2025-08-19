@@ -4,7 +4,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin-bottom: 20px;
-  background-color: #e8f0fe;
+  background-color: #fff;
 }
 
 .reservation-card__header {
@@ -20,8 +20,28 @@
   gap: 8px;
 }
 
+/* 今後の予約 */
+.reservation-card--upcoming .reservation-card__header {
+  background: #2563eb;
+  /* 青 */
+  color: #fff;
+}
+
+/* 当日の予約 */
+.reservation-card--today .reservation-card__header {
+  background: #16a34a;
+  /* 緑 */
+  color: #fff;
+}
+
+/* 過去の予約 */
+.reservation-card--past .reservation-card__header {
+  background: #9ca3af;
+  /* グレー */
+  color: #fff;
+}
+
 .reservation-card__icon {
-  background-color: #2563eb;
   color: #fff;
   border-radius: 50%;
   font-size: 20px;
@@ -32,6 +52,21 @@
   align-items: center;
   line-height: 1;
   vertical-align: middle;
+}
+
+/* 今後の予約（青） */
+.reservation-card--upcoming .reservation-card__icon {
+  background-color: #2563eb;
+}
+
+/* 当日の予約（緑） */
+.reservation-card--today .reservation-card__icon {
+  background-color: #16a34a;
+}
+
+/* 過去の予約（グレー） */
+.reservation-card--past .reservation-card__icon {
+  background-color: #9ca3af;
 }
 
 .reservation-card__qr-icon {
@@ -49,7 +84,7 @@
 .reservation-card__content {
   display: flex;
   flex-direction: column;
-  background-color: #e8f0fe;
+  background-color: #fff;
   padding: 20px 16px;
   font-size: 1.1rem;
   line-height: 1.6;

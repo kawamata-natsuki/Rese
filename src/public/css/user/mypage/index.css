@@ -44,18 +44,74 @@
   font-weight: 600;
 }
 
-.mypage__reservations-empty {
-  background-color: #f5f5f5;
-  padding: 16px;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  text-align: center;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.05);
-  margin-top: 20px;
-}
-
 .mypage__reservations-item {
   margin-top: 24px;
+}
+
+.reservation-card__cta {
+  margin-top: 8px;
+  color: #2563eb;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.reservation-card__cta:hover {
+  color: #1e40af;
+}
+
+/* 過去の予約折り畳み */
+.collapsible {
+  margin-top: 24px;
+}
+
+.collapsible__summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.collapsible__summary::-webkit-details-marker {
+  display: none;
+}
+
+.collapsible__title {
+  line-height: 1;
+}
+
+.collapsible__count {
+  margin-left: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #666;
+  background: #f1f3f5;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.collapsible__chevron {
+  margin-left: auto;
+  transition: transform .2s ease;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+details[open] .collapsible__chevron {
+  transform: rotate(180deg);
+}
+
+.collapsible__content {
+  margin-top: 10px;
 }
 
 /* 右側：お気に入り店舗 */
