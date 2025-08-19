@@ -1,15 +1,28 @@
 @props(['reservation'])
 
+@php
+$startsAt = \Carbon\Carbon::parse(
+$reservation->reservation_date->format('Y-m-d').' '.$reservation->reservation_time->format('H:i:s')
+);
+$isPast = $startsAt->isPast();
+@endphp
+
 <!-- 予約状況を1件ずつ表示するカード -->
 <div class="reservation-card">
-  <!-- ヘッダー（クリックで開閉） -->
   <div class="reservation-card__header">
     <i class="far fa-clock reservation-card__icon"></i>
     <p class="reservation-card__title">
+      @if($isPast)
+      <span class="badge badge--muted">完了</span>
+      @else
       予約 {{ $reservation->display_number }}
+      @if($reservation->reservation_date->isToday())
+      <span class="badge">本日</span>
+      @endif
+      @endif
     </p>
-    <!-- ヘッダーの右端にQRアイコン -->
-    @if ($reservation->reservation_date->isToday())
+
+    @if ($reservation->reservation_date->isToday() && !$isPast)
     <i class="fas fa-qrcode reservation-card__qr-icon"
       title="QRコードを表示"
       data-qr="{{ route('user.reservations.qr', $reservation->id) }}"
@@ -35,7 +48,9 @@
   </div>
 
   <!-- 予約変更・キャンセルボタン -->
+  @unless($isPast || $readonly)
   <div class="reservation-card__actions">
+    {{-- 変更／キャンセル ボタンは未来のみ --}}
     <button type="button"
       class="reservation-edit-button reservation-card__button"
       data-reservation-id="{{ $reservation->id }}"
@@ -48,11 +63,11 @@
       変更
     </button>
 
-    <button
-      type="button"
+    <button type="button"
       class="reservation-cancel-button reservation-card__button"
       data-reservation-id="{{ $reservation->id }}">
       キャンセル
     </button>
   </div>
+  @endunless
 </div>
