@@ -14,7 +14,7 @@
   <div class="shop-show-page__container">
     <!-- 店舗名＋前のページに戻るボタン -->
     <div class="shop-show-page__title-bar">
-      <a href="{{ url()->previous() }}" class="shop-show-page__button--back">
+      <a href="{{ $backUrl }}" class="shop-show-page__button--back" aria-label="前のページに戻る">
         <i class="fas fa-chevron-left"></i>
       </a>
       <p class="shop-show-page__name">{{ $shop->name }}</p>
@@ -106,7 +106,7 @@
                     人数を選択してください
                   </option>
                   @foreach ($numberSlots as $num)
-                  <option value="{{ $num }}" {{ old('number') === $slot ? 'selected' : '' }}>
+                  <option value="{{ $num }}" {{ old('number') == $num ? 'selected' : '' }}>
                     {{ $num }}人
                   </option>
                   @endforeach

@@ -15,7 +15,7 @@ class ShopController extends Controller
         return view('shop.index', compact('shops'));
     }
 
-    public function show(Shop $shop)
+    public function show(Shop $shop, Request $request)
     {
         // 営業時間の取得
         $opening = $shop->opening_time->copy();
@@ -31,6 +31,28 @@ class ShopController extends Controller
         // 予約人数用のスロット作成（～10人まで）
         $numberSlots = range(1, 10);
 
-        return view('shop.show', compact('shop', 'timeSlots', 'numberSlots'));
+        // 戻るボタン
+        $ref = $request->headers->get('referer');
+        $fallback = route('shop.index');
+        $backUrl = $fallback;
+
+        if ($ref) {
+            $refParts = parse_url($ref);
+            $refHost  = $refParts['host'] ?? null;
+            $refPath  = $refParts['path'] ?? '/';
+
+            $currHost = $request->getHost();
+            $currPath = $request->getPathInfo();
+
+            $sameOrigin       = ($refHost === $currHost);
+            $samePath         = rtrim($refPath, '/') === rtrim($currPath, '/');
+            $isReservationFlow = str_contains($refPath, '/reservations');
+
+            if ($sameOrigin && !$samePath && !$isReservationFlow) {
+                $backUrl = $ref;
+            }
+        }
+
+        return view('shop.show', compact('shop', 'timeSlots', 'numberSlots', 'backUrl'));
     }
 }
