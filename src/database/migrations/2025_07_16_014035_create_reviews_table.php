@@ -10,22 +10,25 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('shop_id')->nullable();
-            $table->unsignedBigInteger('reservation_id')->nullable();
-            $table->tinyInteger('rating'); // レビュー評価(1-5)
-            $table->text('comment');
+            // 退会時済みのユーザーもレビューは残す
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            // 店舗はソフトデリート想定（レビューは残す）
+            $table->foreignId('shop_id')->constrained();
+            // 予約必須（予約に紐付かないレビューは不可）
+            $table->foreignId('reservation_id')->constrained()->cascadeOnDelete();
+
+            $table->unsignedTinyInteger('rating'); // レビュー評価(1-5)
+            $table->text('comment')->nullable();
             $table->timestamp('skipped_at')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
 
-            // 複合ユニークキー
-            $table->unique(['user_id', 'reservation_id']);
+            // ユニークキー（1予約1レビュー）
+            $table->unique('reservation_id');
 
-            // 外部キー制約
-            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
-            $table->foreign('shop_id')->references('id')->on('shops')->nullOnDelete();
-            $table->foreign('reservation_id')->references('id')->on('reservations')->nullOnDelete();
+            // 複合インデックス
+            $table->index(['shop_id', 'created_at']);
         });
     }
 
