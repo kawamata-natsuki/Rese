@@ -1,4 +1,7 @@
-@props(['reservation'])
+@props([
+'reservation',
+'readonly' => false,
+])
 
 @php
 $startsAt = \Carbon\Carbon::parse(
