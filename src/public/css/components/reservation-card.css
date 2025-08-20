@@ -37,7 +37,6 @@
 /* 過去の予約 */
 .reservation-card--past .reservation-card__header {
   background: #9ca3af;
-  /* グレー */
   color: #fff;
 }
 
