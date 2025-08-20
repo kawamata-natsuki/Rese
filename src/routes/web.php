@@ -81,6 +81,7 @@ Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(fu
 
     // レビュー投稿・スキップ
     Route::prefix('reviews')->name('reviews.')->group(function () {
+        Route::get('/{reservation}/create', [ReviewController::class, 'create'])->name('create');
         Route::post('/{reservation}', [ReviewController::class, 'store'])
             ->name('store');
         Route::post('/{reservation}/skip', [ReviewController::class, 'skip'])
