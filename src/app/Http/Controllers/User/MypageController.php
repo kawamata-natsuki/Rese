@@ -11,12 +11,12 @@ class MypageController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $now  = now()->format('Y-m-d H:i:s');
+        $now  = now();
 
         // ベースクエリ
         $base = $user->reservations()
             ->where('reservation_status', ReservationStatus::RESERVED->value)
-            ->with('shop.area', 'shop.genre');
+            ->with(['shop.area', 'shop.genre', 'review']);
 
         // 今後の予約（= きょう以降）
         $upcomingReservations = (clone $base)
@@ -32,11 +32,22 @@ class MypageController extends Controller
 
         // 過去の予約（直近10件/降順）
         $pastReservations = (clone $base)
-            ->whereRaw("CONCAT(reservation_date, ' ', reservation_time) < ?", [$now])
+            ->whereRaw("CONCAT(reservation_date, ' ', reservation_time) < ?", [$now->format('Y-m-d H:i:s')])
             ->orderBy('reservation_date', 'desc')
             ->orderBy('reservation_time', 'desc')
             ->take(10)
-            ->get();
+            ->get()
+            ->map(
+                function ($r) {
+                    $startsAtPast = $r->startsAt()->isPast();
+                    $hasReview    = $r->review !== null;
+
+                    // “レビュー待ち”の定義
+                    $r->isReviewPending = $startsAtPast && !$hasReview;
+
+                    return $r;
+                }
+            );
 
         // ユーザーのお気に入り店舗取得
         $favoriteShops = $user->favoriteShops;
