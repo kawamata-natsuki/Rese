@@ -79,10 +79,8 @@ Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(fu
     Route::post('/favorites', [FavoriteController::class, 'toggle'])
         ->name('favorites.toggle');
 
-    // レビュー表示・投稿・スキップ
+    // レビュー投稿・スキップ
     Route::prefix('reviews')->name('reviews.')->group(function () {
-        Route::get('/', [ReviewController::class, 'index'])
-            ->name('index');
         Route::post('/{reservation}', [ReviewController::class, 'store'])
             ->name('store');
         Route::post('/{reservation}/skip', [ReviewController::class, 'skip'])
