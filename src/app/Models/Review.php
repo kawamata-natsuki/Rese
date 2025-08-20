@@ -20,6 +20,7 @@ class Review extends Model
 
     protected $casts = [
         'skipped_at' => 'datetime',
+        'rating'     => 'integer',
     ];
 
     // リレーション定義
