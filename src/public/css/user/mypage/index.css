@@ -100,9 +100,8 @@
 }
 
 .collapsible__chevron {
-  margin-left: auto;
   transition: transform .2s ease;
-  font-size: 14px;
+  font-size: 20px;
   color: #6b7280;
 }
 
