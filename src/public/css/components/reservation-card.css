@@ -22,14 +22,14 @@
 
 /* 今後の予約 */
 .reservation-card--upcoming .reservation-card__header {
-  background: #2563eb;
+  background: #60a5fa;
   /* 青 */
   color: #fff;
 }
 
 /* 当日の予約 */
 .reservation-card--today .reservation-card__header {
-  background: #16a34a;
+  background: #1d4ed8;
   /* 緑 */
   color: #fff;
 }
@@ -55,12 +55,12 @@
 
 /* 今後の予約（青） */
 .reservation-card--upcoming .reservation-card__icon {
-  background-color: #2563eb;
+  background: #60a5fa;
 }
 
 /* 当日の予約（緑） */
 .reservation-card--today .reservation-card__icon {
-  background-color: #16a34a;
+  background: #1d4ed8;
 }
 
 /* 過去の予約（グレー） */
