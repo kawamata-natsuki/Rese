@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ReservationStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class Reservation extends Model
 {
@@ -26,6 +27,13 @@ class Reservation extends Model
         'visited_at'            => 'datetime',
         'reservation_status'    => ReservationStatus::class,
     ];
+
+    public function startsAt(): \Carbon\Carbon
+    {
+        $date = $this->reservation_date->format('Y-m-d');
+        $time = $this->reservation_time->format('H:i:s');
+        return Carbon::parse("$date $time");
+    }
 
     // リレーション定義
     public function shop()
