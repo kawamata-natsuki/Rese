@@ -40,6 +40,25 @@
           </span>
         </div>
 
+        <!-- ★レビュー -->
+        <div class="rating-summary">
+          @php
+          $avg = round($shop->reviews()->avg('rating') ?? 0, 1);
+          $count = $shop->reviews()->count();
+          $filled = (int) floor($avg);
+          $half = ($avg - $filled) >= 0.5;
+          $empty = 5 - $filled - ($half ? 1 : 0);
+          @endphp
+          <div class="rating-summary__stars">
+            @for ($i=0;$i<$filled;$i++) <span class="star star--filled">★</span> @endfor
+              @if($half) <span class="star star--half">★</span> @endif
+              @for ($i=0;$i<$empty;$i++) <span class="star">★</span> @endfor
+          </div>
+          <div class="rating-summary__text">
+            <strong>{{ number_format($avg,1) }}</strong>/5 <span class="count">（{{ $count }}件）</span>
+          </div>
+        </div>
+
         <!-- 店舗紹介 -->
         <p class="shop-show-page__description">
           {{ $shop->description }}
@@ -114,8 +133,14 @@
                 <x-error-message field="number" class="error-message--offset" />
               </div>
             </div>
-
           </div>
+
+          <ul class="reservation-form__notes">
+            <li>ご来店の5分前までにお越しください。</li>
+            <li>キャンセルは前日までにご連絡ください。</li>
+            <li>アレルギーがある方は備考欄でお知らせください。</li>
+          </ul>
+
           <!-- 予約するボタン -->
           <div class="reservation-form__button-wrapper">
             <button class="reservation-form__button">予約する</button>
@@ -123,6 +148,34 @@
         </form>
       </div>
     </div>
+    <section class="shop-show-page__reviews">
+      <h2 class="shop-show-page__reviews-title">最新のレビュー</h2>
+
+      @if ($latestReview)
+      <article class="review">
+        <div class="review__header">
+          <div class="review__stars">
+            @for ($i = 1; $i <= 5; $i++)
+              <span class="star {{ $i <= $latestReview->rating ? 'star--filled' : '' }}">★</span>
+              @endfor
+          </div>
+          <div class="review__meta">
+            <span class="review__user">{{ $latestReview->user->name ?? '匿名' }}</span>
+            <span class="review__date">{{ $latestReview->created_at->format('Y/m/d') }}</span>
+          </div>
+        </div>
+
+        @if($latestReview->comment)
+        <p class="review__comment">{{ $latestReview->comment }}</p>
+        @endif
+      </article>
+      {{-- もっと見るを作るならリンクを置く --}}
+      {{-- <a href="{{ route('shops.reviews.index', $shop) }}" class="reviews__more">他のレビューを見る</a> --}}
+      @else
+      <p class="reviews__empty">まだレビューはありません。</p>
+      @endif
+
+    </section>
   </div>
 </div>
 @endsection
@@ -159,5 +212,33 @@
     // ⬇️ 時刻と人数に適用！
     applySelectColorHandler('time');
     applySelectColorHandler('number');
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const $ = (s) => document.querySelector(s);
+    const dateI = $('#date'),
+      timeI = $('#time'),
+      numI = $('#number');
+    const sumDate = $('#sum-date'),
+      sumTime = $('#sum-time'),
+      sumNum = $('#sum-number');
+
+    const fmt = (v, empty = '未選択') => (v && v.trim()) ? v : empty;
+
+    function updateSummary() {
+      // flatpickr の altInput を使ってるなら表示用は altInput.value
+      const d = dateI?.nextElementSibling?.value || dateI.value;
+      sumDate.textContent = fmt(d);
+      sumTime.textContent = fmt(timeI.value);
+      sumNum.textContent = fmt(numI.value ? `${numI.value}人` : '');
+    }
+
+    ['change', 'input'].forEach(ev => {
+      dateI?.addEventListener(ev, updateSummary);
+      timeI?.addEventListener(ev, updateSummary);
+      numI?.addEventListener(ev, updateSummary);
+    });
+
+    updateSummary();
   });
 </script>
