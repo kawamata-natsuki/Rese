@@ -11,7 +11,13 @@ class ShopController extends Controller
 {
     public function index()
     {
-        $shops = Shop::with(['area', 'genre'])->get();
+        $shops = Shop::query()
+            ->with(['area:id,name', 'genre:id,name'])
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
+            ->orderBy('id')
+            ->paginate(12);
+
         return view('shop.index', compact('shops'));
     }
 
@@ -53,6 +59,47 @@ class ShopController extends Controller
             }
         }
 
-        return view('shop.show', compact('shop', 'timeSlots', 'numberSlots', 'backUrl'));
+        // レビューの平均と件数
+        $avgRating = round($shop->reviews()->avg('rating') ?? 0, 1);
+        $reviewsCount = $shop->reviews()->count();
+
+        // レビュー一覧
+        $reviews = $shop->reviews()
+            ->with('user')
+            ->latest()
+            ->paginate(10);
+
+
+        $latestReview = $shop->reviews()
+            ->with('user')
+            ->latest()
+            ->first();
+
+        return view('shop.show', compact('shop', 'timeSlots', 'numberSlots', 'backUrl', 'avgRating', 'reviewsCount', 'reviews', 'latestReview'));
+    }
+
+    public function searchAjax(Request $request)
+    {
+        $query = Shop::query()
+            ->with(['area:id,name', 'genre:id,name'])
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews');
+
+        if ($request->area && $request->area !== 'all') {
+            $query->where('area_id', $request->area);
+        }
+        if ($request->genre && $request->genre !== 'all') {
+            $query->where('genre_id', $request->genre);
+        }
+        if ($request->keyword) {
+            $query->where('name', 'like', "%{$request->keyword}%");
+        }
+
+        $shops = $query->orderBy('id')->paginate(12);
+
+        // 🔹 カード一覧部分だけをレンダリング
+        $html = view('components.shop-cards', compact('shops'))->render();
+
+        return response()->json(['html' => $html]);
     }
 }
