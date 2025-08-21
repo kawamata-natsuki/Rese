@@ -50,7 +50,11 @@ class MypageController extends Controller
             );
 
         // ユーザーのお気に入り店舗取得
-        $favoriteShops = $user->favoriteShops;
+        $favoriteShops = $user->favoriteShops()
+            ->with(['area:id,name', 'genre:id,name'])
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
+            ->get();
 
         // 予約変更用モーダル内のスロット
         $dateSlots = collect();
