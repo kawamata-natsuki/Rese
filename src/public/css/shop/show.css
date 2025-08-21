@@ -1,17 +1,17 @@
 .shop-show-page {
-  padding: 64px 0;
+  padding: 80px 0 100px;
 }
 
 .shop-show-page__container {
-  max-width: 1300px;
+  max-width: clamp(1200px, 94vw, 1360px);
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
 }
 
 .shop-show-page__body {
-  display: flex;
-  align-items: flex-start;
-  gap: 72px;
+  display: grid;
+  grid-template-columns: 680px 1fr;
+  gap: 56px;
 }
 
 /* ==========================
@@ -53,16 +53,16 @@
 .shop-show-page__info-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  width: 50%;
+  gap: 16px;
+  width: 100%;
 }
 
 /* 店舗画像 */
 .shop-show-page__image-wrapper {
-  display: block;
   width: 100%;
   aspect-ratio: 3 / 2;
-  object-fit: cover;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .shop-show-page__image {
@@ -87,6 +87,51 @@
   color: #333;
 }
 
+/* ★レビュー */
+.rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 14px
+}
+
+.rating-summary__stars {
+  font-size: 20px;
+  line-height: 1
+}
+
+.star {
+  color: #d1d5db
+}
+
+.star--filled {
+  color: #f59e0b
+}
+
+.star--half {
+  position: relative;
+  color: #d1d5db
+}
+
+.star--half::before {
+  content: "★";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #f59e0b
+}
+
+.rating-summary__text {
+  color: #333
+}
+
+.rating-summary__text .count {
+  color: #6b7280;
+  margin-left: 4px
+}
+
 /* 店舗紹介 */
 .shop-show-page__description {
   font-size: 1.4rem;
@@ -97,11 +142,16 @@
      右側：予約フォーマット
 ========================== */
 .shop-show-page__reservation {
-  width: 50%;
-  height: auto;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 96px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+  overflow: hidden;
 }
 
 .reservation-form__heading {
@@ -119,8 +169,8 @@
 .reservation-form__fields {
   display: flex;
   flex-direction: column;
-  padding: 40px 120px;
-  margin-top: 24px;
+  padding: 24px 24px 0;
+  margin-top: 8px;
 }
 
 .reservation-form__field {
@@ -176,27 +226,125 @@ select.reservation-form__input option.is-placeholder {
 .reservation-form__button-wrapper {
   display: flex;
   justify-content: center;
-  margin-bottom: 60px;
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 
 .reservation-form__button {
   width: auto;
   display: inline-block;
-  padding: 6px 16px;
+  padding: 10px 20px;
+  font-size: 1.5rem;
   border-radius: 4px;
   color: #ffffff;
   background-color: #2962ff;
   text-decoration: none;
   cursor: pointer;
-  font-size: 1.4rem;
 }
 
 .reservation-form__button:hover {
   background-color: #0039cb;
 }
 
+.reservation-form__summary {
+  margin: 8px 24px;
+  font-size: .95rem;
+  color: #333;
+}
+
+.reservation-form__notes {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 0 24px 24px;
+  line-height: 1.4;
+  padding: 0 24px;
+}
+
 /* エラーメッセージカスタム */
 .error-message {
   font-size: 0.85rem;
   margin-left: 0;
+}
+
+/* レビュー（フル幅セクション） */
+.shop-show-page__reviews {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 2px solid #e5e7eb;
+}
+
+.shop-show-page__reviews-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 10px;
+  color: #333;
+  padding-left: 8px;
+  border-left: 4px solid #2563eb;
+}
+
+/* レビューカード */
+.review {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.review__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.review__stars {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.star {
+  color: #d1d5db;
+}
+
+.star--filled {
+  color: #f59e0b;
+}
+
+.review__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.review-item__user {
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.review-item__date {
+  white-space: nowrap;
+}
+
+.review__comment {
+  margin-top: 8px;
+  color: #333;
+  white-space: pre-wrap;
+}
+
+.reviews__empty {
+  color: #6b7280;
+}
+
+.reviews__more {
+  display: inline-block;
+  margin-top: 8px;
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
