@@ -25,19 +25,28 @@
       <div class="stars" aria-label="平均{{ number_format($avg,1) }}点、{{ $count }}件のレビュー">
         @if($count > 0)
         @for ($i=0;$i<$filled;$i++) <span class="star star--filled">★</span> @endfor
-          @if($half) <span class="star star--half">★</span> @endif
-          @for ($i=0;$i<$empty;$i++) <span class="star">★</span> @endfor
+          @if($half)
+          <span class="star star--half">★</span>
+          @endif
+          @for($i=0;$i<$empty;$i++)
+            <span class="star">★</span>
+            @endfor
             @else
-            {{-- 0件のときは薄い星だけ表示（任意） --}}
-            @for ($i=0;$i<5;$i++) <span class="star">★</span> @endfor
+            @for ($i=0;$i<5;$i++)
+              <span class="star">★</span>
+              @endfor
               @endif
       </div>
 
       @if($count > 0)
-      <span class="rating-text">{{ number_format($avg,1) }}/5</span>
+      <span class="rating-text">
+        <span class="rating-value">{{ number_format($avg,1) }}</span>
+        <span class="rating-slash">/</span>
+        <small class="rating-scale">5</small>
+      </span>
       <span class="rating-count">（{{ $count }}件）</span>
       @else
-      <span class="rating-empty-text">レビューなし</span>
+      <span class="rating-empty-text">（0件）</span>
       @endif
     </div>
 

@@ -94,12 +94,25 @@
 
 .rating-text {
   font-weight: 600;
-  color: #333
 }
 
-.rating-count {
-  color: #777;
-  font-size: .8rem
+.rating-text small {
+  font-size: 0.85em;
+  color: #666;
+  margin-left: 2px;
+}
+
+.rating-slash {
+  margin: 0 2px;
+  font-size: 0.85em;
+  opacity: 0.75;
+}
+
+.rating-count,
+.rating-empty-text {
+  margin-left: 4px;
+  color: #666;
+  font-size: .9em;
 }
 
 .shop-card__tags {
