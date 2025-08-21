@@ -37,7 +37,14 @@ class Shop extends Model
 
     public function reviews()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasManyThrough(
+            Review::class,
+            Reservation::class,
+            'shop_id',
+            'reservation_id',
+            'id',
+            'id'
+        );
     }
 
     public function reservations()
