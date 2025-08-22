@@ -28,11 +28,23 @@ class Reservation extends Model
         'reservation_status'    => ReservationStatus::class,
     ];
 
-    public function startsAt(): \Carbon\Carbon
+    public function startsAt(): Carbon
     {
         $date = $this->reservation_date->format('Y-m-d');
         $time = $this->reservation_time->format('H:i:s');
         return Carbon::parse("$date $time");
+    }
+
+    // 来店済みチェック
+    public function getIsVisitedAttribute(): bool
+    {
+        return !is_null($this->visited_at);
+    }
+
+    // 予約日当日チェック
+    public function isForToday(): bool
+    {
+        return $this->reservation_date->isToday();
     }
 
     // リレーション定義
