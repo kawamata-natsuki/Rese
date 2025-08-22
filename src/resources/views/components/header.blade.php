@@ -36,12 +36,12 @@
 
         @guest
         <li class="header__nav-item">
-          <a href="{{route('register')}}" class="header__nav-link">
-            Registration
+          <a href="{{route('register.view')}}" class="header__nav-link">
+            Sign Up
           </a>
         </li>
         <li class="header__nav-item">
-          <a href="{{route('login')}}" class="header__nav-link">
+          <a href="{{route('login.view')}}" class="header__nav-link">
             Login
           </a>
         </li>
