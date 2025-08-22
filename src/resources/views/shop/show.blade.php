@@ -49,13 +49,34 @@
           $half = ($avg - $filled) >= 0.5;
           $empty = 5 - $filled - ($half ? 1 : 0);
           @endphp
+
           <div class="rating-summary__stars">
-            @for ($i=0;$i<$filled;$i++) <span class="star star--filled">★</span> @endfor
-              @if($half) <span class="star star--half">★</span> @endif
-              @for ($i=0;$i<$empty;$i++) <span class="star">★</span> @endfor
+            @if($count > 0)
+            @for ($i=0; $i<$filled; $i++)
+              <span class="star star--filled">★</span>
+              @endfor
+              @if($half)
+              <span class="star star--half">★</span>
+              @endif
+              @for ($i=0; $i<$empty; $i++)
+                <span class="star">★</span>
+                @endfor
+                @else
+                @for ($i=0; $i<5; $i++)
+                  <span class="star">★</span>
+                  @endfor
+                  @endif
           </div>
+
           <div class="rating-summary__text">
-            <strong>{{ number_format($avg,1) }}</strong>/5 <span class="count">（{{ $count }}件）</span>
+            @if($count > 0)
+            <strong>{{ number_format($avg,1) }}</strong>
+            <span class="rating-slash">/</span>
+            <small class="rating-scale">5</small>
+            <span class="count">（{{ $count }}件）</span>
+            @else
+            <span class="count">（0件）</span>
+            @endif
           </div>
         </div>
 
@@ -136,7 +157,6 @@
           </div>
 
           <ul class="reservation-form__notes">
-            <li>ご来店の5分前までにお越しください。</li>
             <li>キャンセルは前日までにご連絡ください。</li>
             <li>アレルギーがある方は備考欄でお知らせください。</li>
           </ul>
@@ -148,34 +168,23 @@
         </form>
       </div>
     </div>
+
     <section class="shop-show-page__reviews">
       <h2 class="shop-show-page__reviews-title">最新のレビュー</h2>
 
-      @if ($latestReview)
-      <article class="review">
-        <div class="review__header">
-          <div class="review__stars">
-            @for ($i = 1; $i <= 5; $i++)
-              <span class="star {{ $i <= $latestReview->rating ? 'star--filled' : '' }}">★</span>
-              @endfor
-          </div>
-          <div class="review__meta">
-            <span class="review__user">{{ $latestReview->user->name ?? '匿名' }}</span>
-            <span class="review__date">{{ $latestReview->created_at->format('Y/m/d') }}</span>
-          </div>
-        </div>
-
-        @if($latestReview->comment)
-        <p class="review__comment">{{ $latestReview->comment }}</p>
-        @endif
-      </article>
-      {{-- もっと見るを作るならリンクを置く --}}
-      {{-- <a href="{{ route('shops.reviews.index', $shop) }}" class="reviews__more">他のレビューを見る</a> --}}
-      @else
+      @forelse ($recentReviews as $review)
+      @include('components.review-item', ['review' => $review])
+      @empty
       <p class="reviews__empty">まだレビューはありません。</p>
-      @endif
+      @endforelse
 
+      @if ($reviewsCount > 3)
+      <a class="reviews__more" href="{{ route('shops.reviews.index', $shop) }}">
+        もっと見る（{{ $reviewsCount - 3 }}件）
+      </a>
+      @endif
     </section>
+
   </div>
 </div>
 @endsection
