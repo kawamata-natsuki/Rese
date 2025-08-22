@@ -47,6 +47,7 @@
         </div>
 
         <div class="login-page__footer">
+
           <!-- ログイン状態を保持 -->
           <div class="login-page__remember">
             <input id="remember" type="checkbox" name="remember" value="1" class="login-page__remember-checkbox">
@@ -55,9 +56,16 @@
           <!-- ログインボタン -->
           <div class="login-page__button">
             <button class="login-button" type="submit">
-              ログイン
+              Login
             </button>
           </div>
+
+          <div class="login-page__link">
+            <a href="{{ route('register.view') }}">
+              会員登録はこちら
+            </a>
+          </div>
+
         </div>
       </form>
     </div>
