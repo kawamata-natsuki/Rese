@@ -15,6 +15,21 @@
       </a>
     </div>
 
+    <div class="header__right">
+      @if (request()->routeIs('user.reservations.done', 'login', 'register'))
+      <div class="header__search header__search--placeholder" aria-hidden="true"></div>
+      @else
+      @include('components.search-form')
+      @endif
+
+      @auth
+      <div class="header__user">
+        <span class="header__avatar"><i class="fas fa-user"></i></span>
+        <span class="header__user-name">{{ Auth::user()->name }}</span>
+      </div>
+      @endauth
+    </div>
+
     <!-- フルスクリーンメニュー -->
     <nav class="header__nav-content">
       <ul class="header__nav-list">
@@ -54,7 +69,4 @@
     </nav>
   </div>
 
-  @if (url()->current() === route('shop.index'))
-  @include('components.search-form')
-  @endif
 </header>
