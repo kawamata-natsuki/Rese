@@ -1,0 +1,42 @@
+.shop-review-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px
+}
+
+.shop-review-header__thumb {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 8px
+}
+
+.shop-review-header__name {
+  font-size: 1.1rem;
+  margin: 0 0 6px
+}
+
+.shop-review-header__tags span {
+  color: #666;
+  margin-right: 8px
+}
+
+.shop-review-header__actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px
+}
+
+.btn--ghost {
+  padding: .4rem .7rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px
+}
+
+.btn--primary {
+  padding: .4rem .7rem;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 6px
+}
