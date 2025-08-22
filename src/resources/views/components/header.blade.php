@@ -16,7 +16,7 @@
     </div>
 
     <div class="header__right">
-      @if (request()->routeIs('user.reservations.done', 'login', 'register'))
+      @if (request()->routeIs('login.view', 'register.view', 'user.reservations.done'))
       <div class="header__search header__search--placeholder" aria-hidden="true"></div>
       @else
       @include('components.search-form')
