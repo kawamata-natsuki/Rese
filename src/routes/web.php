@@ -11,6 +11,7 @@ use App\Http\Controllers\User\FavoriteController;
 use App\Http\Controllers\User\MypageController;
 use App\Http\Controllers\User\ReservationController;
 use App\Http\Controllers\User\ReviewController;
+use App\Http\Controllers\User\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 // ===============================
@@ -99,6 +100,22 @@ Route::prefix('user')->name('user.')->middleware(['auth', 'verified'])->group(fu
 // ===============================
 // 店舗代表者ユーザー機能
 // ===============================
-Route::get('/shop/checkin', [CheckinController::class, 'checkin'])
-    ->middleware(['auth', 'can:shop-access'])
-    ->name('shop.checkin');
+Route::prefix('shop')->name('shop.')->middleware(['auth:shop'])->group(function () {
+    // 手動チェックイン
+    Route::post('/reservations/{reservation}/checkin', CheckinController::class)
+        ->name('reservations.checkin');
+
+    // QR（署名付きURL）チェックイン
+    Route::get('/checkin', [CheckinController::class, 'checkin'])
+        ->name('checkin');
+});
+
+// ===============================
+// 通知
+// ===============================
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+    Route::post('/notifications/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+});
