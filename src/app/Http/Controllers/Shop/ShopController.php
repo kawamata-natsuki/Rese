@@ -62,20 +62,13 @@ class ShopController extends Controller
         // レビューの平均と件数
         $avgRating = round($shop->reviews()->avg('rating') ?? 0, 1);
         $reviewsCount = $shop->reviews()->count();
-
-        // レビュー一覧
-        $reviews = $shop->reviews()
+        $recentReviews = $shop->reviews()
             ->with('user')
             ->latest()
-            ->paginate(10);
+            ->take(3)
+            ->get();
 
-
-        $latestReview = $shop->reviews()
-            ->with('user')
-            ->latest()
-            ->first();
-
-        return view('shop.show', compact('shop', 'timeSlots', 'numberSlots', 'backUrl', 'avgRating', 'reviewsCount', 'reviews', 'latestReview'));
+        return view('shop.show', compact('shop', 'timeSlots', 'numberSlots', 'backUrl', 'avgRating', 'reviewsCount', 'recentReviews'));
     }
 
     public function searchAjax(Request $request)
