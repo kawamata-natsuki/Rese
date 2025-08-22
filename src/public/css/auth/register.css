@@ -3,86 +3,104 @@
   justify-content: center;
   align-items: center;
   height: calc(100vh - 80px);
-  background-color: #eeeeee;
+  background: #eee;
 }
 
 .register-page__container {
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  background-color: #f9f9f9;
-  margin-bottom: 80px;
+  border-radius: 8px;
+  background: #f9f9f9;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .08);
 }
 
 .register-page__heading {
-  padding: 16px 20px;
-  background-color: #2962ff;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-  color: #ffffff;
-  font-size: 1.5rem;
-  font-weight: 400;
+  padding-bottom: .8rem;
+  margin: 0 0 1rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #222;
+  text-align: left;
+  border-bottom: 1px solid #d0d0d0;
+  letter-spacing: 1px;
 }
 
 .register-page__content {
   width: 100%;
-  padding: 36px 20px 20px 20px;
-}
-
-.register-page__form-section {
-  display: flex;
-  flex-direction: column;
+  padding: 20px;
 }
 
 .register-page__form-group {
   display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.register-page__label {
-  display: flex;
   align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
 }
 
 .register-page__icon {
-  width: 32px;
-  height: 32px;
+  flex: 0 0 44px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  color: #333;
-  margin-right: 8px;
+  font-size: 28px;
+  color: #555;
 }
 
-
 .register-page__input {
-  width: 90%;
-  padding: 10px 8px 4px 8px;
-  border-bottom: 1px solid #333;
-  font-size: 1.2rem;
+  flex: 1;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.register-page__input:focus {
+  border-color: #2962ff;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(41, 98, 255, .12);
 }
 
 .register-page__input::placeholder {
-  font-size: 1rem;
   color: #999;
 }
 
 .register-page__button {
   display: flex;
-  justify-content: flex-end;
-  margin: 0 8px;
+  justify-content: center;
+  margin: 16px 0;
 }
 
 .register-button {
-  padding: 8px 16px;
-  font-size: 1.3rem;
-  background-color: #2962ff;
-  border-radius: 4px;
-  color: #ffffff;
+  width: 70%;
+  max-width: 240px;
+  padding: 10px 0;
+  font-size: 1.1rem;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  background: linear-gradient(to bottom, #2962ff, #1e4cd6);
+}
+
+.register-button:hover {
+  filter: brightness(.98);
+}
+
+.register-page__link {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.register-page__link a {
+  color: #2962ff;
+  text-decoration: none;
+}
+
+.register-page__link a:hover {
+  text-decoration: underline;
 }

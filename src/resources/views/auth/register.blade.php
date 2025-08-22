@@ -9,56 +9,52 @@
 @section('content')
 <div class="register-page">
   <div class="register-page__container">
-    <h1 class="register-page__heading">
-      Registration
-    </h1>
+    <h1 class="register-page__heading">Sign Up</h1>
 
     <div class="register-page__content">
-      <form action="{{route('register')}}" method="post" class="login-page__form" novalidate>
+      <form action="{{ route('register') }}" method="post" class="register-page__form" novalidate>
         @csrf
 
         <div class="register-page__form-section">
-          <!-- 名前 -->
+          {{-- 名前 --}}
           <div class="register-page__form-group">
             <label for="name" class="register-page__label">
               <i class="fas fa-user register-page__icon"></i>
             </label>
-            <input class="register-page__input"
-              type="text" name="name" id="name"
-              value="{{ old('name')  }}"
-              placeholder="Username">
+            <input class="register-page__input" type="text" id="name" name="name"
+              value="{{ old('name') }}" placeholder="Username">
           </div>
           <x-error-message field="name" preserve />
 
-          <!-- メールアドレス -->
+          {{-- メール --}}
           <div class="register-page__form-group">
             <label for="email" class="register-page__label">
               <i class="fas fa-envelope register-page__icon"></i>
             </label>
-            <input class="register-page__input"
-              type="email" name="email" id="email"
-              value="{{ old('email')  }}"
-              placeholder="Email">
+            <input class="register-page__input" type="email" id="email" name="email"
+              value="{{ old('email') }}" placeholder="Email">
           </div>
           <x-error-message field="email" preserve />
 
-          <!-- パスワード -->
+          {{-- パスワード --}}
           <div class="register-page__form-group">
             <label for="password" class="register-page__label">
               <i class="fas fa-lock register-page__icon"></i>
             </label>
-            <input class="register-page__input"
-              type="password" name="password" id="password"
+            <input class="register-page__input" type="password" id="password" name="password"
               placeholder="Password">
           </div>
           <x-error-message field="password" preserve />
         </div>
 
-        <!-- 登録ボタン -->
         <div class="register-page__button">
-          <button class="register-button" type="submit">
-            登録
-          </button>
+          <button class="register-button" type="submit">Sign Up</button>
+        </div>
+
+        <div class="register-page__link">
+          <a href="{{ route('login.view') }}">
+            ログインはこちら
+          </a>
         </div>
       </form>
     </div>
