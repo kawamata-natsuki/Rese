@@ -23,6 +23,7 @@
       @endif
 
       @auth
+      @include('components.notification-bell')
       <div class="header__user">
         <span class="header__avatar"><i class="fas fa-user"></i></span>
         <span class="header__user-name">{{ Auth::user()->name }}</span>
