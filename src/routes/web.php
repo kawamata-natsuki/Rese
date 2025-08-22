@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Shop\CheckinController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Shop\ShopReviewController;
 use App\Http\Controllers\Shop\SearchController;
 use App\Http\Controllers\Shop\ShopController;
 use App\Http\Controllers\User\FavoriteController;
@@ -55,6 +56,8 @@ Route::name('shop.')->middleware((['auth', 'verified']))->group(function () {
         ->name('index');
     Route::get('/shops/{shop}', [ShopController::class, 'show'])
         ->name('show');
+    Route::get('shops/{shop}/reviews', [ShopReviewController::class, 'index'])
+        ->name('reviews.index');
     // リアルタイム検索用
     Route::get('shops/search/ajax', [SearchController::class, 'searchAjax'])
         ->name('search.ajax');
