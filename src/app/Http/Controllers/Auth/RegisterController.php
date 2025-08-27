@@ -21,6 +21,8 @@ class RegisterController extends Controller
         // ユーザー作成・メール認証のメール自動送信
         event(new Registered($user = $creator->create($request->validated())));
 
+        Auth::login($user);
+
         // メール認証画面へリダイレクト
         return redirect()->route('verification.notice');
     }
