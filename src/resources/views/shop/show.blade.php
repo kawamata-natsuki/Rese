@@ -179,7 +179,7 @@
       @endforelse
 
       @if ($reviewsCount > 3)
-      <a class="reviews__more" href="{{ route('shops.reviews.index', $shop) }}">
+      <a class="reviews__more" href="{{ route('shop.reviews.index', $shop) }}">
         もっと見る（{{ $reviewsCount - 3 }}件）
       </a>
       @endif
