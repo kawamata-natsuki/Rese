@@ -17,10 +17,10 @@
 }
 
 .register-page__heading {
-  padding-bottom: .8rem;
-  margin: 0 0 1rem;
+  padding-bottom: 0.8rem;
+  margin-bottom: 1rem;
   font-size: 1.6rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #222;
   text-align: left;
   border-bottom: 1px solid #d0d0d0;
@@ -72,14 +72,14 @@
 .register-page__button {
   display: flex;
   justify-content: center;
+  width: 100%;
   margin: 16px 0;
 }
 
 .register-button {
   width: 70%;
-  max-width: 240px;
   padding: 10px 0;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #fff;
   border: 0;
   border-radius: 8px;

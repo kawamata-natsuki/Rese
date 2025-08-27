@@ -10,7 +10,7 @@
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   background-color: #f9f9f9;
   padding: 20px;
@@ -116,7 +116,7 @@
   padding: 10px 0;
   font-size: 1.2rem;
   background: linear-gradient(to bottom, #2962ff, #1e4cd6);
-  border-radius: 6px;
+  border-radius: 8px;
   color: #ffffff;
 }
 
