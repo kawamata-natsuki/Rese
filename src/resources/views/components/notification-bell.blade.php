@@ -22,21 +22,20 @@
     role="menu"
     style="display:none">
     <div class="header__bell-head">
-      <span class="header__bell-title">通知</span>
+      <span class="header__bell-title">お知らせ</span>
       <button type="button" class="header__bell-markall" @click="markAllRead()">すべて既読</button>
     </div>
 
     <ul class="header__bell-list">
       <template x-for="n in items" :key="n.id">
         <li :class="{'is-unread': !n.read_at}" class="header__bell-item" role="none">
-          <a :href="n.url" role="menuitem"
-            @click.prevent="markOneRead(n.id).then(()=>{ window.location = n.url })">
+          <a :href="n.url" role="menuitem" @click.prevent="onItemClick(n)">
             <div class="header__bell-item-title">
               <span class="dot" aria-hidden="true"></span>
               <span class="txt" x-text="n.title"></span>
             </div>
             <div class="header__bell-item-msg" x-text="n.message"></div>
-            <div class="header__bell-item-time" x-text="n.created_at"></div>
+            <div class="header__bell-item-time" x-text="n.time_text ?? n.created_at"></div>
           </a>
         </li>
       </template>
@@ -61,12 +60,19 @@
       },
       fetchList() {
         fetch(INDEX_URL, {
-            credentials: 'same-origin'
+            credentials: 'same-origin',
+            cache: 'no-store',
           })
           .then(r => r.json())
           .then(d => {
             this.items = d.latest;
-            this.unread = d.unread_count;
+            this.unread = Number(d.unread_count ?? 0);
+          })
+          .catch(err => {
+            console.error('[notifications] load error', err);
+            // 失敗時は値を触らない or 明示的にゼロ＆空配列にする
+            // this.items = [];
+            // this.unread = 0;
           });
       },
       markAllRead() {
@@ -101,6 +107,17 @@
             read_at: (new Date()).toISOString()
           }) : i);
           this.unread = Math.max(0, this.unread - 1);
+        });
+      },
+      onItemClick(n) {
+        // 擬似通知（id が 'pending:' で始まる）は既読APIを叩かず遷移
+        if (String(n.id).startsWith('pending:')) {
+          window.location = n.url;
+          return;
+        }
+        // 通常のDB通知は既読にしてから遷移
+        this.markOneRead(n.id).then(() => {
+          window.location = n.url
         });
       },
       init() {
