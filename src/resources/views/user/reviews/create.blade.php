@@ -42,6 +42,16 @@
       <form method="POST" action="{{ route('user.reviews.store', $reservation) }}" id="review-form">
         @csrf
 
+        <!-- タイトル -->
+        <div class="field">
+          <label for="title" class="label">タイトル</label>
+          <input id="title" name="title" type="text"
+            value="{{ old('title') }}"
+            maxlength="80" placeholder="例）コスパ最高、また行きたい！">
+          <div class="help"><span id="title-count">{{ mb_strlen(old('title','')) }}</span>/80 文字</div>
+          @error('title')<div class="help" style="color:#b91c1c">{{ $message }}</div>@enderror
+        </div>
+
         <div class="field field--rating">
           <label class="label">評価を選択（★1〜5）</label>
           <div class="star-group" id="rating-stars">
