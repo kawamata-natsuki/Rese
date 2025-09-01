@@ -13,6 +13,7 @@ class Review extends Model
         'user_id',
         'shop_id',
         'reservation_id',
+        'title',
         'rating',
         'comment',
         'skipped_at',

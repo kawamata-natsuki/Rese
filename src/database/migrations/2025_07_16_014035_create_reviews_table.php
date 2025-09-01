@@ -17,6 +17,7 @@ return new class extends Migration
             // 予約必須（予約に紐付かないレビューは不可）
             $table->foreignId('reservation_id')->constrained()->cascadeOnDelete();
 
+            $table->string('title', 80);
             $table->unsignedTinyInteger('rating'); // レビュー評価(1-5)
             $table->text('comment')->nullable();
             $table->timestamp('skipped_at')->nullable();
