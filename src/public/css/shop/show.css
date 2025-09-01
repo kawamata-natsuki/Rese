@@ -41,7 +41,7 @@
 
 /* 店舗名 */
 .shop-show-page__name {
-  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
   font-weight: 700;
   margin: 8px 0 12px;
   word-break: break-word;
@@ -159,8 +159,8 @@
      右側：予約フォーマット
 ========================== */
 .shop-show-page__reservation {
-  position: static;
-  top: auto;
+  position: sticky;
+  top: 80px;
   align-self: start;
   display: flex;
   flex-direction: column;
@@ -172,10 +172,10 @@
 }
 
 .reservation-form__heading {
-  background-color: #1e90ff;
-  color: #fff;
+  background: #e0e0e0;
+  color: #333;
   font-size: 1.25rem;
-  font-weight: auto;
+  font-weight: 600;
   letter-spacing: .02em;
   padding: 14px 16px;
   margin-bottom: 8px;
@@ -253,7 +253,7 @@ select.reservation-form__input option.is-placeholder {
   padding: 10px 16px;
   font-size: 1.1rem;
   border-radius: 8px;
-  background-color: #ff5722;
+  background-color: #2962ff;
   color: #fff;
   text-decoration: none;
   cursor: pointer;
