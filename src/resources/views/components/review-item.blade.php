@@ -10,6 +10,7 @@
       <span class="review__date">{{ $review->created_at->format('Y/m/d') }}</span>
     </div>
   </div>
+  <h4 class="review-item__title">{{ $review->title }}</h4>
   @if($review->comment)
   <p class="review__comment">{{ $review->comment }}</p>
   @endif
