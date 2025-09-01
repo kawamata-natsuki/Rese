@@ -84,6 +84,23 @@
         <p class="shop-show-page__description">
           {{ $shop->description }}
         </p>
+
+        <!-- レビュー一覧 -->
+        <section class="shop-show-page__reviews">
+          <h2 class="shop-show-page__reviews-title">最新のレビュー</h2>
+
+          @forelse ($recentReviews as $review)
+          @include('components.review-item', ['review' => $review])
+          @empty
+          <p class="reviews__empty">まだレビューはありません。</p>
+          @endforelse
+
+          @if ($reviewsCount > 3)
+          <a class="reviews__more" href="{{ route('shop.reviews.index', $shop) }}">
+            もっと見る（{{ $reviewsCount - 3 }}件）
+          </a>
+          @endif
+        </section>
       </div>
 
       <!-- 右側：予約フォーマット -->
@@ -156,11 +173,6 @@
             </div>
           </div>
 
-          <ul class="reservation-form__notes">
-            <li>キャンセルは前日までにご連絡ください。</li>
-            <li>アレルギーがある方は備考欄でお知らせください。</li>
-          </ul>
-
           <!-- 予約するボタン -->
           <div class="reservation-form__button-wrapper">
             <button class="reservation-form__button">予約する</button>
@@ -168,22 +180,6 @@
         </form>
       </div>
     </div>
-
-    <section class="shop-show-page__reviews">
-      <h2 class="shop-show-page__reviews-title">最新のレビュー</h2>
-
-      @forelse ($recentReviews as $review)
-      @include('components.review-item', ['review' => $review])
-      @empty
-      <p class="reviews__empty">まだレビューはありません。</p>
-      @endforelse
-
-      @if ($reviewsCount > 3)
-      <a class="reviews__more" href="{{ route('shop.reviews.index', $shop) }}">
-        もっと見る（{{ $reviewsCount - 3 }}件）
-      </a>
-      @endif
-    </section>
 
   </div>
 </div>
