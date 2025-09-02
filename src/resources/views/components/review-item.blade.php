@@ -6,7 +6,6 @@
         @endfor
     </div>
     <div class="review__meta">
-      <span class="review__user">{{ $review->user->name ?? '退会済みユーザー' }}</span>
       <span class="review__date">{{ $review->created_at->format('Y/m/d') }}</span>
     </div>
   </div>
