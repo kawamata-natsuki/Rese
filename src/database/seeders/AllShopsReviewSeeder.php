@@ -57,6 +57,7 @@ class AllShopsReviewSeeder extends Seeder
                     'user_id'        => $user->id,
                     'shop_id'        => $reservation->shop_id,   // ← これが必須
                     'rating'         => rand(3, 5),
+                    'title'          => '初めて来店しました',
                     'comment'        => sprintf(
                         '%s に来店。とても良かったです！(seeded)',
                         $reservation->reservation_date->format('Y/m/d')

@@ -37,6 +37,7 @@ class ReviewController extends Controller
             'user_id'        => $request->user()->id,
             'shop_id'        => $reservation->shop_id,
             'reservation_id' => $reservation->id,
+            'title'          => $data['title'],
             'rating'         => $data['rating'],
             'comment'        => $data['comment'] ?? null,
         ]);
