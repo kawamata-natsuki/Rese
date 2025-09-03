@@ -38,7 +38,8 @@ class Reservation extends Model
     // 来店済みチェック
     public function getIsVisitedAttribute(): bool
     {
-        return !is_null($this->visited_at);
+        return !is_null($this->visited_at)
+            || $this->reservation_status === ReservationStatus::VISITED;
     }
 
     // 予約日当日チェック
