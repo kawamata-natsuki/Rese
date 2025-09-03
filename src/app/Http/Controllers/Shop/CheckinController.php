@@ -69,15 +69,28 @@ class CheckinController extends Controller
                 ->lockForUpdate()
                 ->first();
 
-            if ($res->visited_at) {
-                return; // すでにチェックイン済み（他リクエストが先行）
+            // すでにチェックイン済み（他リクエストが先行）
+            if ($res->visited_at || $res->reservation_status === \App\Enums\ReservationStatus::VISITED) {
+                return;
             }
 
-            $res->visited_at = now();
-            $res->save();
+            // 来店確定
+            $res->fill([
+                'visited_at'         => now(),
+                'reservation_status' => \App\Enums\ReservationStatus::VISITED,
+            ])->save();
 
+            // 未レビューなら通知
             if (!$res->review()->exists()) {
-                $res->user->notify(new ReviewReminder($res));
+                // さらに堅くするなら既存通知チェックも：
+                $exists = $res->user->notifications()
+                    ->where('type', \App\Notifications\ReviewReminder::class)
+                    ->where('data->reservation', $res->id)
+                    ->exists();
+
+                if (!$exists) {
+                    $res->user->notify(new \App\Notifications\ReviewReminder($res)); // ShouldQueueを推奨
+                }
             }
         });
     }
