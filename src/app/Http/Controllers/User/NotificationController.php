@@ -15,26 +15,27 @@ class NotificationController extends Controller
     {
         $u = $request->user();
 
-        // 予約日時を過ぎた & レビュー未投稿（visited_at使うなら前の条件でもOK）
-        $pendingQ = Reservation::query()
+        // 1) 基本クエリを最初に1回だけ作る（来店済み・未レビュー・予約日時が現在以前）
+        $baseQ = Reservation::query()
             ->where('user_id', $u->id)
-            ->where('reservation_status', ReservationStatus::VISITED) // ★来店済みだけ
-            ->whereDoesntHave('review');
+            ->where('reservation_status', ReservationStatus::VISITED)
+            ->whereDoesntHave('review')
+            ->whereRaw("TIMESTAMP(reservation_date, IFNULL(TIME(reservation_time), '00:00:00')) <= ?", [now()]);
 
-        $pendingTotal = (clone $pendingQ)->count();
+        // 2) 件数とリストを同じ条件で
+        $pendingTotal = (clone $baseQ)->count();
 
-        // ★ 固定でこれでOK（存在チェック付き）
         $reviewRoute = Route::has('user.reviews.create') ? 'user.reviews.create' : null;
 
-        $pendingList = (clone $pendingQ)
+        $pendingList = (clone $baseQ)
             ->with('shop')
             ->orderByDesc('reservation_date')
             ->orderByDesc('reservation_time')
             ->limit(10)
             ->get()
-            ->map(function ($r) {
-                $date = $r->reservation_date; // cast: date
-                $time = $r->reservation_time; // cast: datetime|null
+            ->map(function ($r) use ($reviewRoute) {
+                $date = $r->reservation_date;             // cast: date
+                $time = $r->reservation_time;             // cast: datetime|null
                 $hms  = $time ? $time->format('H:i') : '00:00';
                 $dt   = \Carbon\Carbon::parse($date->format('Y-m-d') . ' ' . $hms);
 
@@ -42,22 +43,24 @@ class NotificationController extends Controller
                     'id'         => 'pending:' . $r->id,
                     'title'      => 'レビューのお願い',
                     'message'    => ($r->shop->name ?? 'ご来店店') . 'のレビューをお願いします',
-                    'url'        => route('user.reviews.create', ['reservation' => $r->id], false),
-                    'read_at'    => null,
-                    'created_at' => $dt->diffForHumans(),     // 相対時間（例: 6日前）
-                    'time_text'  => $dt->format('Y/m/d H:i'), // 予約日時（例: 2025/08/23 18:00）
+                    'url'        => $reviewRoute ? route($reviewRoute, ['reservation' => $r->id], false) : null,
+                    'read_at'    => null, // 擬似通知なので常に未読扱い
+                    'created_at' => $dt->diffForHumans(),
+                    'time_text'  => $dt->format('Y/m/d H:i'),
                     'ts'         => $dt->timestamp,
                 ];
             });
 
+        // ※ ← ここで $pendingQ を作り直す必要はもう無い
+
         // 既存DB通知
         $dbLatest = $u->notifications()
             ->latest()->take(10)->get()
-            ->map(function ($n) {
+            ->map(function ($n) use ($u) {
                 $url = $n->data['url'] ?? '#';
 
-                // 1) 絶対URL→相対へ
-                if (Str::startsWith($url, ['http://', 'https://'])) {
+                // 絶対URL→相対
+                if (\Illuminate\Support\Str::startsWith($url, ['http://', 'https://'])) {
                     $parts = parse_url($url);
                     $path  = $parts['path']  ?? '/';
                     $query = isset($parts['query']) ? ('?' . $parts['query']) : '';
@@ -65,27 +68,23 @@ class NotificationController extends Controller
                     $url   = $path . $query . $frag;
                 }
 
-                // 2) 旧形式 `/reviews/{id}/create` → 現行にリライト
+                // 旧形式→現行
                 if (preg_match('#^/reviews/(\d+)/create$#', $url, $m)) {
                     $url = route('user.reviews.create', ['reservation' => $m[1]], false);
                 }
 
-                // 3) 「レビュー作成URL」ならアクセス可能か検証（予約の所有・未レビュー・来店済み）
+                // アクセス検証（所有・未レビュー・来店済み）
                 if (preg_match('#^/user/reviews/(\d+)/create$#', $url, $m)) {
                     $rid = (int)$m[1];
                     $canAccess = Reservation::query()
                         ->where('id', $rid)
                         ->where('user_id', $u->id)
-                        ->where('reservation_status', \App\Enums\ReservationStatus::VISITED)
+                        ->where('reservation_status', ReservationStatus::VISITED)
                         ->whereDoesntHave('review')
                         ->exists();
 
                     if (!$canAccess) {
-                        // 403になるリンクは無効化（候補: 店舗詳細などに差し替え/除外）
-                        // ここでは "除外" するために null を返す
-                        return null;
-                        // 置き換えたい場合は:
-                        // $url = url('/'); // or 任意の安全なページ
+                        return null; // 除外
                     }
                 }
 
@@ -99,7 +98,7 @@ class NotificationController extends Controller
                     'ts'         => $n->created_at->timestamp,
                 ];
             })
-            ->filter()           // null(=除外) を落とす
+            ->filter()
             ->values();
 
         $latest = $pendingList->concat($dbLatest)
@@ -110,7 +109,7 @@ class NotificationController extends Controller
 
         return response()->json([
             'unread_count' => $unread_count,
-            'latest' => $latest,
+            'latest'       => $latest,
         ])->header('Cache-Control', 'no-store');
     }
 
