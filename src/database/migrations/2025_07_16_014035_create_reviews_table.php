@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('title', 80);
             $table->unsignedTinyInteger('rating'); // レビュー評価(1-5)
             $table->text('comment')->nullable();
+            $table->string('display_name', 50);
             $table->timestamp('skipped_at')->nullable();
 
             $table->softDeletes();
