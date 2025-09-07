@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Reservation;
 use App\Models\Review;
 use App\Http\Requests\ReviewRequest;
+use App\Support\DisplayName;
 
 class ReviewController extends Controller
 {
@@ -40,8 +41,11 @@ class ReviewController extends Controller
             'title'          => $data['title'],
             'rating'         => $data['rating'],
             'comment'        => $data['comment'] ?? null,
+            'display_name'   => DisplayName::mask($request->user()->name ?? ''),
         ]);
 
-        return redirect()->route('user.mypage.index')->with('success', 'レビューを投稿しました');
+        return redirect()
+            ->route('user.mypage.index')
+            ->with('success', 'レビューを投稿しました');
     }
 }
