@@ -23,6 +23,8 @@ class ReviewRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'title.required'  => 'タイトルを入力してください',
+            'title.max'       => 'タイトルは :max 文字以内で入力してください。',
             'rating.required' => '評価（★）を選択してください。',
             'rating.between'  => '評価は1〜5の範囲で指定してください。',
             'comment.max'     => 'コメントは :max 文字以内で入力してください。',
