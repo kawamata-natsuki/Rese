@@ -17,6 +17,7 @@ class Review extends Model
         'rating',
         'comment',
         'skipped_at',
+        'display_name',
     ];
 
     protected $casts = [
