@@ -1,298 +1,322 @@
-.review-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, .05);
+/* ===========================
+   Review Create Page (Full Reset + Onkai Style)
+   =========================== */
+
+:root {
+  --c-bg: #f9fafb;
+  /* ページ背景 */
+  --c-card: #ffffff;
+  /* カード背景 */
+  --c-text: #111827;
+  /* 本文 */
+  --c-text-muted: #6b7280;
+  /* サブ */
+  --c-border: #e5e7eb;
+  /* 枠線 */
+  --c-primary: #2563eb;
+  /* メイン青 */
+  --c-primary-hover: #1d4ed8;
+  /* ホバー青 */
+  --c-danger: #dc2626;
+  /* エラー */
+  --radius: 12px;
+  --shadow: 0 4px 14px rgba(0, 0, 0, .05);
 }
 
-.review-wrap {
-  max-width: 680px;
-  margin: 48px auto;
-  padding: 0 16px
+/* ページ全体 */
+.reviews-create-page {
+  padding: 48px 0;
+  background: var(--c-bg);
+  min-height: 100vh;
+  color: var(--c-text);
+  font-family: "Noto Sans JP", sans-serif;
 }
 
-.btn-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #2563eb;
-  font-weight: 600;
-  font-size: .95rem;
-  line-height: 1;
-  text-decoration: none;
-  margin-bottom: 20px;
+.reviews-create-page__container {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.btn-back i {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1em;
-  height: 1em;
-  font-size: 1em;
-  transform: translateY(1px);
-}
-
-
-.btn-back__text:hover {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
-}
-
-/* カード共通 */
-.form-card,
-.summary {
-  background: #fff;
-  border: 1px solid #cbd5e1;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 20px;
-  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .35);
-}
-
-.card-header {
-  background: #1e90ff;
-  color: #fff;
-  font-weight: 600;
-  padding: 10px 16px;
-  font-size: 1.2rem;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-}
-
-.card-body {
-  padding: 20px 32px
-}
-
-/* 予約サマリ：画像16:9＋テキスト */
-.summary-block {
-  display: grid;
-  grid-template-columns: 160px 1fr;
-  gap: 16px;
-  align-items: center
-}
-
-.summary-media {
-  border-radius: 8px;
-  overflow: hidden
-}
-
-.summary-media img {
-  width: 100%;
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 12px;
-}
-
-.summary-info {
-  padding: 0 4px;
-}
-
-.summary__title {
-  font-weight: 700;
-  margin: 0 0 8px;
-  color: #333;
-}
-
-.summary__row {
-  margin: 2px 0;
-  color: #333;
-}
-
-.summary__row i {
-  margin-right: 6px;
-  color: #2563eb
-}
-
-/* セクション区切り線 */
-.section-divider {
-  height: 1px;
-  background: #e5e7eb;
-  margin: 20px 0;
-}
-
-/* フォーム */
-.field {
-  margin: 16px 0
-}
-
-.field--rating {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.label {
-  display: block;
-  font-weight: 600;
-  margin: 0;
-  color: #333;
-}
-
-.star-group {
-  display: flex;
-  flex-direction: row-reverse;
-  gap: 6px
-}
-
-.star-group input {
-  display: none
-}
-
-.star {
-  font-size: 28px;
-  cursor: pointer;
-  color: #d1d5db;
-  transition: transform .05s ease
-}
-
-.star:hover {
-  transform: scale(1.05)
-}
-
-.star-group input:checked~label.star,
-.star-group label.star:hover,
-.star-group label.star:hover~label.star {
-  color: #f59e0b;
-}
-
-/* 青で統一 */
-
-textarea {
-  width: 100%;
-  min-height: 140px;
-  padding: 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  resize: vertical
-}
-
-.actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 10px 16px;
-  cursor: pointer;
-  background: #fff
-}
-
-.btn-primary {
-  background: #2563eb;
-  color: #fff;
-  border-color: #2563eb
-}
-
-.btn-primary:disabled {
-  opacity: .6;
-  cursor: not-allowed
-}
-
-.btn-ghost {
-  background: #fff;
-  color: #2563eb;
-  border-color: transparent
-}
-
-.back-link {
-  margin-bottom: 12px
-}
-
-/* 1) 枠線/影/余白をちょい良くする */
-.review-card,
-.form-card,
-.summary {
-  border-color: #e6e9ef;
-  /* 枠を少し淡く */
-  box-shadow: 0 10px 28px rgba(2, 6, 23, .08);
-}
-
-.card-body {
-  padding: 24px 28px;
-}
-
-/* ほんの少し広げる */
-
-/* 2) フォーカス見える化（キーボードでも分かる） */
-textarea:focus-visible,
-.btn:focus-visible {
-  outline: 3px solid rgba(37, 99, 235, .18);
-  outline-offset: 2px;
-  border-color: #93c5fd;
-}
-
-/* 3) ボタンに“押し感” */
-.btn {
-  transition: transform .08s, box-shadow .12s, filter .12s;
-}
-
-.btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(2, 6, 23, .08);
-}
-
-.btn:active {
-  transform: none;
-  box-shadow: none;
-}
-
-.btn-ghost:hover {
-  background: #f6f8fb;
-}
-
-/* 4) 星：キーボード操作時のフォーカス & SR対応 */
-.star-group {
+/* 見出し */
+.reviews-create-page__heading {
+  text-align: center;
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 500;
+  letter-spacing: .15em;
+  margin-bottom: 24px;
   position: relative;
 }
 
-.star-group input {
+.reviews-create-page__heading::after {
+  content: "";
   position: absolute;
-  /* display:none はやめる */
-  opacity: 0;
-  width: 1px;
-  height: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -8px;
+  width: 120px;
+  height: 2px;
+  background: var(--c-border);
+}
+
+/* セクション */
+.reviews-create-page__section {
+  margin: 1.6rem 0;
+}
+
+/* ===== 予約サマリ ===== */
+.reviews-create-page__summary {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
 }
 
-.star-group input:focus-visible+label.star {
-  outline: 2px solid #93c5fd;
-  outline-offset: 2px;
-  border-radius: 6px;
-}
-
-/* 既存の着色ロジックを維持（hover/checked） */
-.star-group input:checked~label.star,
-.star-group label.star:hover,
-.star-group label.star:hover~label.star {
-  color: #f59e0b;
-}
-
-/* 5) 画像カードの角丸を統一 */
-.summary-media img {
-  border-radius: 8px;
-}
-
-/* 6) モバイル余白を少し増やす */
-@media (max-width:560px) {
-  .card-body {
-    padding: 18px;
+@media (max-width: 640px) {
+  .reviews-create-page__summary {
+    flex-direction: column;
   }
 }
 
-/* レスポンシブ（幅が狭いと縦並び） */
-@media (max-width:560px) {
-  .summary-block {
-    grid-template-columns: 1fr
+.reviews-create-page__summary-header {
+  background: #f3f4f6;
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--c-border);
+}
+
+/* 内容部分 */
+.reviews-create-page__summary-body {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  align-items: flex-start;
+  /* 文字は上寄せ（自然） */
+}
+
+.reviews-create-page__summary-media {
+  flex: 0 0 200px;
+}
+
+.reviews-create-page__summary-media img {
+  width: 200px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.reviews-create-page__summary-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: .95rem;
+}
+
+.reviews-create-page__summary-info p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0;
+}
+
+/* アイコンをテキストの高さに合わせる */
+.review-page__icon {
+  width: 18px;
+  height: 18px;
+  color: var(--c-text-muted);
+  flex-shrink: 0;
+}
+
+/* ===== 告知 ===== */
+.reviews-create-page__notice {
+  margin: 8px 0;
+  padding: 8px 12px;
+  font-size: .85rem;
+  color: var(--c-text-muted);
+  line-height: 1.6;
+}
+
+/* ===== フォームカード ===== */
+.reviews-create-page__form-card {
+  padding: 20px;
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* 必須説明 */
+.form-note {
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.required-mark {
+  color: var(--c-danger);
+}
+
+/* ===== フィールド共通 ===== */
+.field {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  margin: 14px 0;
+}
+
+.field .label {
+  flex: 0 0 100px;
+  /* ラベル幅を固定 */
+  font-weight: 500;
+  margin-top: 10px;
+  /* 入力欄と縦位置を揃える */
+}
+
+.field-control {
+  flex: 1;
+  min-width: 0;
+}
+
+.field-control input[type="text"],
+.field-control textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--c-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: .95rem;
+  outline: none;
+  transition: border .2s, box-shadow .2s;
+}
+
+.field-control input[type="text"]:focus,
+.field-control textarea:focus {
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+}
+
+.field-control textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.field-control .help {
+  margin-top: 4px;
+  font-size: .8rem;
+  color: #6b7280;
+  text-align: right;
+  /* 右下に配置 */
+}
+
+/* ===== 星評価 ===== */
+.field--rating .field-control {
+  display: flex;
+  align-items: center;
+  height: 38px;
+}
+
+.field--rating .star-group {
+  display: inline-flex;
+  gap: 6px;
+  flex-direction: row-reverse;
+  /* 視覚は左から点灯 */
+  justify-content: flex-start;
+  /* 左揃え */
+}
+
+.field--rating input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.field--rating .star {
+  cursor: pointer;
+  font-size: 28px;
+  color: #d1d5db;
+  transition: transform .1s, color .1s;
+}
+
+.field--rating .star:hover {
+  transform: scale(1.1);
+}
+
+#star-1:checked~label[for="star-1"],
+#star-2:checked~label[for="star-1"],
+#star-2:checked~label[for="star-2"],
+#star-3:checked~label[for="star-1"],
+#star-3:checked~label[for="star-2"],
+#star-3:checked~label[for="star-3"],
+#star-4:checked~label[for="star-1"],
+#star-4:checked~label[for="star-2"],
+#star-4:checked~label[for="star-3"],
+#star-4:checked~label[for="star-4"],
+#star-5:checked~label[for="star-1"],
+#star-5:checked~label[for="star-2"],
+#star-5:checked~label[for="star-3"],
+#star-5:checked~label[for="star-4"],
+#star-5:checked~label[for="star-5"] {
+  color: #f59e0b;
+  text-shadow: 0 0 6px rgba(245, 158, 11, .25);
+}
+
+/* ===== ボタン ===== */
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: .9rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid var(--c-border);
+  background: #fff;
+  color: var(--c-text);
+  transition: .2s;
+}
+
+.btn:hover {
+  box-shadow: var(--shadow);
+}
+
+.btn-primary {
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--c-primary-hover);
+}
+
+.btn[disabled] {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* スピナー */
+.btn-spinner {
+  margin-left: .4rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn,
+  .btn-primary {
+    width: 100%;
   }
 }
