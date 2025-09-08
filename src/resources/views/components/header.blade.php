@@ -2,21 +2,23 @@
   <div class="header__nav">
     <!-- ロゴ -->
     <div class="header__logo">
-      <a href="{{ route('shop.index') }}" class="header__logo-link">
+      <a href="{{ request()->routeIs('admin.*') ? route('admin.dashboard') : route('shop.index') }}" class="header__logo-link">
         <img src="/images/rese-logo.svg" alt="Rese logo" class="header__logo-img">
         <span class="header__logo-text">Rese</span>
       </a>
     </div>
 
     <div class="header__right">
-      @if (request()->routeIs('login.view', 'register.view', 'user.reservations.done'))
+      @if (request()->routeIs('admin.*'))
+      {{-- admin では検索バーを出さない --}}
+      @elseif (request()->routeIs('login.view', 'register.view', 'user.reservations.done'))
       <div class="header__search header__search--placeholder" aria-hidden="true"></div>
       @else
       @include('components.search-form')
       @endif
 
       @auth
-      @if (!request()->routeIs('login.view', 'register.view'))
+      @if (!request()->routeIs('login.view', 'register.view') && !request()->routeIs('admin.*'))
       @include('components.notification-bell')
 
       <!-- User menu (details/summaryでJSレス) -->
