@@ -1,42 +1,255 @@
+.shop-reviews-page {
+  padding: 64px 0;
+}
+
+.shop-reviews-page__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+}
+
 .shop-review-header {
   display: flex;
-  gap: 16px;
-  align-items: center;
-  margin-bottom: 16px
+  align-items: flex-start;
+  gap: 24px;
 }
 
 .shop-review-header__thumb {
-  width: 96px;
-  height: 96px;
+  width: 180px;
+  border-radius: 8px;
   object-fit: cover;
-  border-radius: 8px
 }
 
+.shop-review-header__meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* 右まで伸ばす */
 .shop-review-header__name {
-  font-size: 1.1rem;
-  margin: 0 0 6px
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 2px 0 4px;
 }
 
 .shop-review-header__tags span {
-  color: #666;
-  margin-right: 8px
+  font-size: .85rem;
+  color: #6b7280;
+  margin-right: 8px;
 }
 
 .shop-review-header__actions {
-  margin-top: 8px;
+  margin-left: auto;
   display: flex;
-  gap: 8px
-}
-
-.btn--ghost {
-  padding: .4rem .7rem;
-  border: 1px solid #d1d5db;
-  border-radius: 6px
+  gap: 8px;
 }
 
 .btn--primary {
-  padding: .4rem .7rem;
   background: #2563eb;
   color: #fff;
-  border-radius: 6px
+  border-radius: 8px;
+  padding: .45rem .8rem;
+}
+
+.btn--ghost {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: .45rem .8rem;
+}
+
+.rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.rating-summary__text {
+  font-size: .95rem;
+  color: #111827;
+}
+
+/* すべての★のデフォルト（空星） */
+.star {
+  font-size: 20px;
+  color: #d1d5db;
+  /* グレー */
+}
+
+/* 塗りつぶし★（共通：ヘッダーもカードも） */
+.star--filled {
+  color: #f59e0b;
+  /* 黄色 */
+  text-shadow: 0 0 3px rgba(245, 158, 11, .22);
+}
+
+/* 半分★（共通） */
+.star--half {
+  background: linear-gradient(90deg, #f59e0b 50%, #d1d5db 50%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+
+/* ヘッダーの“空星を少し薄く”したい場合だけ局所的に */
+.rating-summary__stars .star {
+  opacity: .35;
+}
+
+.rating-summary__stars .star--filled {
+  opacity: 1;
+}
+
+/* ← 黄色は濃く表示 */
+
+.shop-review-body {
+  margin-top: 12px;
+}
+
+/* 分布（ヘッダー内） */
+.rating-dist--header {
+  margin-top: 10px;
+  max-width: 600px;
+}
+
+.rating-dist__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.rating-dist__label {
+  width: 30px;
+  font-size: 14px;
+  text-align: right;
+}
+
+.rating-dist__bar {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rating-dist__bar span {
+  display: block;
+  height: 100%;
+  background: #f59e0b;
+}
+
+.rating-dist__pct {
+  min-width: 70px;
+  text-align: right;
+  font-size: 12px;
+  color: #555;
+}
+
+/* 並び替え：分布の直下・右寄せ */
+.review-sortbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 0 12px;
+}
+
+.sort-select {
+  padding: .35rem .5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.review-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.review-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.review-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-card__rating-num {
+  margin-left: 6px;
+  color: #6b7280;
+  font-size: .9rem;
+}
+
+.review-card__date {
+  color: #6b7280;
+  font-size: .9rem;
+}
+
+.review-card__title {
+  font-weight: 700;
+  margin: 6px 0;
+}
+
+.review-card__comment {
+  color: #111827;
+  line-height: 1.7;
+}
+
+.review-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.review-card__user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #374151;
+}
+
+.btn-helpful {
+  opacity: .5;
+  cursor: not-allowed;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: .35rem .6rem;
+}
+
+.pagination {
+  margin-top: 16px;
+}
+
+@media (min-width:900px) {
+  .review-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width:768px) {
+  .shop-review-header {
+    flex-direction: column;
+  }
+
+  .shop-review-header__thumb {
+    width: 100%;
+  }
+
+  .shop-review-header__actions {
+    margin-left: 0;
+  }
 }
