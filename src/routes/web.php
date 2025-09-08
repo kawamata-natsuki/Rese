@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Shop\CheckinController;
 use App\Http\Controllers\Auth\LoginController;
@@ -118,4 +119,24 @@ Route::middleware('auth')->group(function () {
         ->name('notifications.index');
     Route::post('/notifications/read', [NotificationController::class, 'markAsRead'])
         ->name('notifications.read');
+});
+
+// ===============================
+// 管理者（Admin）
+// ===============================
+Route::prefix('admin')->name('admin.')->group(function () {
+    // 未ログイン
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('login', [AdminLoginController::class, 'showLoginView'])
+            ->name('login.view');
+        Route::post('login', [AdminLoginController::class, 'login'])
+            ->name('login');
+    });
+    // ログイン済
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('/', fn() => view('admin.dashboard'))
+            ->name('dashboard');
+        Route::post('logout', [AdminLoginController::class, 'destroy'])
+            ->name('logout');
+    });
 });
