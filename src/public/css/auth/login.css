@@ -137,3 +137,16 @@
 .login-page__link a:hover {
   text-decoration: underline;
 }
+
+/* 管理者用 */
+
+.admin-badge {
+  display: inline-block;
+  margin-left: .5rem;
+  padding: .1rem .4rem;
+  font-size: .75rem;
+  border-radius: .35rem;
+  background: #fee;
+  color: #b00020;
+  border: 1px solid #f5c2c7;
+}
