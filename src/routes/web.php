@@ -13,6 +13,7 @@ use App\Http\Controllers\User\MypageController;
 use App\Http\Controllers\User\ReservationController;
 use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\User\NotificationController;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Route;
 
 // ===============================
@@ -125,18 +126,27 @@ Route::middleware('auth')->group(function () {
 // 管理者（Admin）
 // ===============================
 Route::prefix('admin')->name('admin.')->group(function () {
-    // 未ログイン
+    // ログイン・ログアウト
     Route::middleware('guest:admin')->group(function () {
         Route::get('login', [AdminLoginController::class, 'showLoginView'])
             ->name('login.view');
         Route::post('login', [AdminLoginController::class, 'login'])
             ->name('login');
-    });
-    // ログイン済
-    Route::middleware('auth:admin')->group(function () {
-        Route::get('/', fn() => view('admin.dashboard'))
-            ->name('dashboard');
         Route::post('logout', [AdminLoginController::class, 'destroy'])
             ->name('logout');
+    });
+
+
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('/', fn() => view('admin.dashboard.index'))
+            ->name('dashboard');
+        Route::get('/shops/index', [AdminShopController::class, 'index'])
+            ->name('shops.index');
+        Route::get('/shops/create', [AdminShopController::class, 'create'])
+            ->name('shops.create');
+        Route::get('/shop-owners/index', AdminShopOwnerController::class, 'index')
+            ->name('shop-owners.index');
+        Route::get('/shop-owners/create', AdminShopOwnerController::class, 'create')
+            ->name('shop-owners.create');
     });
 });
