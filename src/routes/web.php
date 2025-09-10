@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminLoginController;
+use App\Http\Controllers\Admin\AdminShopController;
+use App\Http\Controllers\Admin\AdminShopOwnerController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Shop\CheckinController;
 use App\Http\Controllers\Auth\LoginController;
@@ -122,31 +124,41 @@ Route::middleware('auth')->group(function () {
         ->name('notifications.read');
 });
 
+
 // ===============================
 // 管理者（Admin）
 // ===============================
 Route::prefix('admin')->name('admin.')->group(function () {
-    // ログイン・ログアウト
+
+    // 未ログイン
     Route::middleware('guest:admin')->group(function () {
         Route::get('login', [AdminLoginController::class, 'showLoginView'])
-            ->name('login.view');
+            ->name('showLoginView');
         Route::post('login', [AdminLoginController::class, 'login'])
             ->name('login');
-        Route::post('logout', [AdminLoginController::class, 'destroy'])
-            ->name('logout');
     });
 
-
+    // ログイン済み（管理者）向け
     Route::middleware('auth:admin')->group(function () {
+        Route::post('logout', [AdminLoginController::class, 'destroy'])
+            ->name('logout');
         Route::get('/', fn() => view('admin.dashboard.index'))
             ->name('dashboard');
-        Route::get('/shops/index', [AdminShopController::class, 'index'])
+
+        // 店舗
+        Route::get('/shops/index',  [AdminShopController::class, 'index'])
             ->name('shops.index');
         Route::get('/shops/create', [AdminShopController::class, 'create'])
             ->name('shops.create');
-        Route::get('/shop-owners/index', AdminShopOwnerController::class, 'index')
+        Route::post('/shops/store', [AdminShopController::class, 'create'])
+            ->name('shops.store');
+
+        // オーナー
+        Route::get('/shop-owners/index',  [AdminShopOwnerController::class, 'index'])
             ->name('shop-owners.index');
-        Route::get('/shop-owners/create', AdminShopOwnerController::class, 'create')
+        Route::get('/shop-owners/create', [AdminShopOwnerController::class, 'create'])
             ->name('shop-owners.create');
+        Route::post('/shop-owners/store', [AdminShopOwnerController::class, 'store'])
+            ->name('shop-owners.store');
     });
 });
