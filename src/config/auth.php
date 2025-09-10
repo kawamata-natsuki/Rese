@@ -43,6 +43,10 @@ return [
         'admin' => [
             'driver'   => 'session',
             'provider' => 'admins'
+        ],
+        'owner' => [
+            'driver' => 'ssession',
+            'provider' => 'shop_owners',
         ]
     ],
 
@@ -71,13 +75,13 @@ return [
 
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Admin::class
+            'model' => App\Models\Admin::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'shop_owners' => [
+            'driver' => 'eloauent',
+            'model' => App\Models\ShopOwner::class,
+        ]
     ],
 
     /*
