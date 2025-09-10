@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Area;
 use App\Models\Genre;
 use App\Models\Shop;
+use App\Models\ShopOwner;
 use Illuminate\Database\Seeder;
 
 class ShopSeeder extends Seeder
@@ -20,6 +21,11 @@ class ShopSeeder extends Seeder
         $izakayaId  = Genre::where('name', '居酒屋')->value('id');
         $italianId  = Genre::where('name', 'イタリアン')->value('id');
         $ramenId    = Genre::where('name', 'ラーメン')->value('id');
+
+        $ownerIds = ShopOwner::pluck('id')->values()->all();
+        if (count($ownerIds) === 0) {
+            throw new \RuntimeException('ShopOwner が1件もありません。先に ShopOwnerSeeder を流してください。');
+        }
 
         $shops = [
             [
@@ -204,8 +210,11 @@ class ShopSeeder extends Seeder
             ],
         ];
 
-        foreach ($shops as $shop) {
-            Shop::create($shop);
+        $i = 0;
+        foreach ($shops as $data) {
+            $data['shop_owner_id'] = $ownerIds[$i % count($ownerIds)];
+            Shop::create($data);
+            $i++;
         }
     }
 }
