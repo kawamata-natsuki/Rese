@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use app\Http\Controllers\Controller;
-use app\Models\Shop;
-use app\Models\ShopOwner;
-use app\Models\User;
-
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Shop;
+use App\Models\ShopOwner;
+use App\Models\User;
 
 class AdminDashboardController extends Controller
 {
@@ -23,7 +21,7 @@ class AdminDashboardController extends Controller
             'shopCount'     => Shop::count(),
             'latestShops'   => Shop::latest()
                 ->take(5)
-                ->get(['id', 'name', 'shop-owner_id', 'created_at']),
+                ->get(['id', 'name', 'shop_owner_id', 'created_at']),
 
             'userCount'     => User::count(),
             'newUsersCount' => User::where('created_at', today())->count(),
