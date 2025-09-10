@@ -10,6 +10,7 @@ class Shop extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'shop_owner_id ',
         'name',
         'area_id',
         'genre_id',
@@ -55,5 +56,10 @@ class Shop extends Model
     public function likedUsers()
     {
         return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+    }
+
+    public function shopOwner()
+    {
+        return $this->belongsTo(ShopOwner::class, 'shop_owner_id');
     }
 }
