@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\AdminShopController;
 use App\Http\Controllers\Admin\AdminShopOwnerController;
@@ -15,7 +16,6 @@ use App\Http\Controllers\User\MypageController;
 use App\Http\Controllers\User\ReservationController;
 use App\Http\Controllers\User\ReviewController;
 use App\Http\Controllers\User\NotificationController;
-use App\Models\Admin;
 use Illuminate\Support\Facades\Route;
 
 // ===============================
@@ -142,7 +142,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('auth:admin')->group(function () {
         Route::post('logout', [AdminLoginController::class, 'destroy'])
             ->name('logout');
-        Route::get('/', fn() => view('admin.dashboard.index'))
+        Route::get('/', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
 
         // 店舗
