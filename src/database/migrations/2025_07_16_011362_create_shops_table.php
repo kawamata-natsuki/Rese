@@ -10,19 +10,28 @@ return new class extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('area_id')->nullable();
-            $table->unsignedBigInteger('genre_id')->nullable();
+
+            $table->foreignId('shop_owner_id')
+                ->constrained('shop_owners')
+                ->cascadeOnDelete();
+
+            $table->string('name')->unique();
             $table->text('description');
             $table->string('image_url');
             $table->time('opening_time');
             $table->time('closing_time');
+
+            $table->foreignId('area_id')
+                ->nullable()
+                ->constrained('areas')
+                ->nullOnDelete();
+            $table->foreignId('genre_id')
+                ->nullable()
+                ->constrained('genres')
+                ->nullOnDelete();
+
             $table->softDeletes();
             $table->timestamps();
-
-            // 外部キー制約
-            $table->foreign('area_id')->references('id')->on('areas')->onDelete('set null');
-            $table->foreign('genre_id')->references('id')->on('genres')->onDelete('set null');
         });
     }
 
