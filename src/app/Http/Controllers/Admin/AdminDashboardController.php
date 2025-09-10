@@ -12,8 +12,8 @@ class AdminDashboardController extends Controller
     public function index()
     {
         return view('admin.dashboard.index', [
-            'ownerCount'    => ShopOwner::count(),
-            'latestOwners'  => ShopOwner::with('shops:id,shop_owner_id,name')
+            'shopOwnerCount'    => ShopOwner::count(),
+            'latestShopOwners'      => ShopOwner::with('shops:id,shop_owner_id,name')
                 ->latest()
                 ->take(5)
                 ->get(['id', 'name', 'email', 'created_at']),
