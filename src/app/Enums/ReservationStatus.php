@@ -6,7 +6,7 @@ enum ReservationStatus: string
 {
   case RESERVED = 'reserved';
   case VISITED  = 'visited';
-  case CANCELED = 'canceled';
+  case CANCELLED = 'cancelled';
   case NO_SHOW  = 'no-show';
 
   public function label(): string
@@ -14,7 +14,7 @@ enum ReservationStatus: string
     return match ($this) {
       self::RESERVED => '予約済',
       self::VISITED  => '来店済',
-      self::CANCELED => 'キャンセル',
+      self::CANCELLED => 'キャンセル',
       self::NO_SHOW  => '無断キャンセル',
     };
   }
