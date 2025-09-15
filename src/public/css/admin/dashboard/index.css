@@ -79,7 +79,7 @@
   grid-area: latest;
 }
 
-/* Hero */
+/* ===== Hero ===== */
 /* resources/views/admin/dashboard/partials/hero.blade.php */
 .admin-hero {
   background: #fff;
@@ -93,35 +93,194 @@
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 24px;
+  gap: 36px;
   padding: 12px 16px;
+  align-items: start;
 }
 
 .admin-hero__content {
   display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
+  grid-template-columns: 1fr minmax(240px, 320px);
+  align-items: stretch;
   gap: 16px;
 }
 
-.admin-hero__image h1 {
-  margin: 0 0 6px;
-  font-size: 1.6rem;
+.admin-hero__mini {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.admin-hero__image p {
+.mini-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  padding: 12px;
+}
+
+.mini-card__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.mini-card__left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mini-card__right {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.mini-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  justify-content: center;
+}
+
+.mini-card__main {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin: 6px 0 10px;
+}
+
+.mini-card__total {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.mini-card__delta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.mini-card__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.mini-card .btn {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+}
+
+/* カレンダーバッジ */
+.calendar-badge {
+  position: relative;
+  width: var(--cal-w, 64px);
+  height: var(--cal-h, 82px);
+  border-radius: var(--cal-radius, 14px);
+  background: var(--cal-primary, #2962ff);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  text-align: center;
+  line-height: 1;
+  box-shadow: 0 12px 26px rgba(17, 24, 39, .18);
+  isolation: isolate;
+  flex: none;
+  align-self: center;
+  transform: translateY(-6px);
+  padding-top: 6px;
+}
+
+.calendar-badge::before,
+.calendar-badge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+}
+
+.calendar-badge::before {
+  background: var(--cal-back-1, #3a79ff);
+  transform: translate(10px, 12px) rotate(6deg);
+  filter: blur(.2px);
+}
+
+.calendar-badge::after {
+  background: var(--cal-back-2, #1749ff);
+  transform: translate(-4px, 8px) rotate(-6deg);
+  filter: blur(.2px);
+}
+
+.calendar-badge__month {
+  font-size: .72rem;
+  letter-spacing: .22em;
+  opacity: .95;
+}
+
+.calendar-badge__day {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 3px;
+}
+
+.calendar-badge__weekday {
+  font-size: .62rem;
+  letter-spacing: .18em;
+  opacity: .95;
+}
+
+/* テキスト */
+.admin-hero__title {
+  margin: 0 0 6px;
+  font-size: clamp(20px, 2.8vw, 28px);
+  letter-spacing: .03em;
+}
+
+.admin-hero__message {
   margin: 0;
   color: var(--muted);
+  font-size: clamp(13px, 1.2vw, 15px);
+}
+
+.admin-hero__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pair {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pair__chip {
+  font-size: 12px;
+  color: var(--muted);
+  background: #f5f7ff;
+  border: 1px solid #e6eaff;
+  padding: 3px 10px;
+  border-radius: 999px;
+  line-height: 1;
 }
 
 /* Buttons */
 .btn {
-  --btn-h: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: var(--btn-h);
-  padding: 0 14px;
+  padding: 8px 14px;
   border-radius: 10px;
   font-weight: 700;
   border: 1px solid transparent;
@@ -150,10 +309,10 @@
   border-color: #b6c3ff;
 }
 
-/* KPI 6枚を均等に */
+/* ===== KPI ===== */
 .admin-dashboard-page__stats {
   display: grid;
-  gap: 16px;
+  gap: 18px;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   justify-items: stretch;
 }
@@ -161,6 +320,7 @@
 .admin-dashboard-page__stat-card {
   width: 100%;
   min-width: 0;
+  min-height: 92px;
 }
 
 .admin-dashboard-page__stat-count {
@@ -172,6 +332,7 @@
   position: relative;
   height: var(--line-h);
   background: #fff;
+  min-height: 0;
 }
 
 .admin-dashboard-page__pie .chart-box {
@@ -352,70 +513,6 @@
   }
 }
 
-/* カレンダーバッジ */
-.calendar-badge {
-  position: relative;
-  width: var(--cal-w);
-  height: var(--cal-h);
-  border-radius: var(--cal-radius);
-  background: var(--cal-primary);
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  text-align: center;
-  line-height: 1;
-  box-shadow: 0 12px 26px rgba(17, 24, 39, .18);
-  isolation: isolate;
-  /* 擬似要素の重なり用 */
-  flex: none;
-  /* グリッドで潰れないように */
-}
-
-.calendar-badge::before,
-.calendar-badge::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  z-index: -1;
-}
-
-.calendar-badge::before {
-  background: var(--cal-back-1);
-  transform: translate(8px, 10px) rotate(6deg);
-  filter: blur(.2px);
-}
-
-.calendar-badge::after {
-  background: var(--cal-back-2);
-  transform: translate(-6px, 6px) rotate(-6deg);
-  filter: blur(.2px);
-}
-
-.calendar-badge__month {
-  font-size: .62rem;
-  letter-spacing: .22em;
-  opacity: .95
-}
-
-.calendar-badge__day {
-  font-size: 1.4rem;
-  font-weight: 800
-}
-
-.calendar-badge__weekday {
-  font-size: .58rem;
-  letter-spacing: .18em;
-  opacity: .95
-}
-
-/* Heroの行で潰れないように中央揃え */
-.admin-hero__row {
-  align-items: center;
-}
 
 /* 幅が狭いときはさらに小さく */
 @media (max-width: 1200px) {

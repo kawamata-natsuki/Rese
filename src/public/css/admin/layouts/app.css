@@ -29,6 +29,8 @@ body {
   margin-left: var(--sb-width);
   min-height: 100vh;
   background: #f5f7fb;
+  display: grid;
+  align-content: start;
 }
 
 .onepage {
