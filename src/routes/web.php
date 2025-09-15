@@ -133,14 +133,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // 未ログイン
     Route::middleware('guest:admin')->group(function () {
         Route::get('login', [AdminLoginController::class, 'showLoginView'])
-            ->name('showLoginView');
+            ->name('login');
         Route::post('login', [AdminLoginController::class, 'login'])
             ->name('login');
     });
 
     // ログイン済み（管理者）向け
     Route::middleware('auth:admin')->group(function () {
-        Route::post('logout', [AdminLoginController::class, 'destroy'])
+        Route::post('logout', [AdminLoginController::class, 'logout'])
             ->name('logout');
         Route::get('/', [AdminDashboardController::class, 'index'])
             ->name('dashboard');

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Shop;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
-use App\Notifications\ReviewReminder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

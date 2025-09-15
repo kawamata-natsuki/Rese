@@ -1,0 +1,211 @@
+:root {
+  --sb-width: 256px;
+  --brand-500: #2962ff;
+  --brand-700: #1e3a8a;
+
+  /* サブ項目の色味（控えめな白） */
+  --sb-subtext: #eef2ff;
+  --sb-hover: rgba(255, 255, 255, .12);
+  --sb-open: rgba(255, 255, 255, .08);
+}
+
+.admin-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--sb-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  z-index: 50;
+  background: linear-gradient(180deg, var(--brand-500), var(--brand-700));
+  border-right: none;
+  overflow: auto;
+}
+
+/* ロゴ */
+
+.header__logo {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px 16px;
+}
+
+.header__logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.header__logo-img {
+  width: 36px;
+  height: 36px;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
+.header__logo-text {
+  font-weight: 800;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: inherit;
+  position: relative;
+}
+
+/* ナビゲーション */
+
+.admin-sidebar__nav {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.admin-sidebar__menu {
+  list-style: none;
+  margin: 0;
+  padding: 16px 8px;
+}
+
+/* ナビゲーションリンク */
+.admin-sidebar__link,
+.admin-sidebar__summar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  transition: background .15s ease, transform .12s ease;
+}
+
+.admin-sidebar__text {
+  /* アイコンとテキストの間隔を一定に */
+  flex-shrink: 0;
+  font-size: 1.2rem;
+}
+
+.admin-sidebar__link:hover,
+.admin-sidebar__summary:hover {
+  background: var(--sb-hover);
+  border-radius: 0;
+}
+
+.sidebar-icon {
+  display: flex;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  line-height: 1.2;
+  color: #dbeafe;
+}
+
+/* ======= 縦展開：枠も点も付けない・下に自然につなげる ======= */
+
+/* summary（見出し） */
+details.admin-accordion {
+  margin: 6px 0;
+}
+
+.admin-sidebar__summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  color: #fff;
+}
+
+.admin-sidebar__summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-sidebar__summary::marker {
+  content: "";
+}
+
+/* Firefoxの点を消す */
+details[open] .admin-sidebar__summary {
+  background: var(--sb-open);
+}
+
+.chev {
+  margin-left: auto;
+  color: #e0e7ff;
+  transition: transform .15s ease;
+}
+
+details[open] .chev {
+  transform: rotate(180deg);
+}
+
+/* サブメニュー（inline） */
+.admin-submenu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-submenu--inline {
+  padding: 6px 0 8px 52px;
+  margin-bottom: 8px;
+  display: block;
+  padding: 10px 0;
+  /* 横幅いっぱい・下に並ぶだけ */
+  color: var(--sb-subtext);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.admin-submenu--inline li {
+  list-style: none;
+  margin: 0;
+}
+
+.admin-submenu--inline a {}
+
+.admin-submenu--inline:hover {
+  background: var(--sb-hover);
+}
+
+.admin-submenu--inline.is-current {
+  background: rgba(255, 255, 255, .14);
+  color: #fff;
+}
+
+/* ログアウト（既存） */
+.admin-sidebar__footer {
+  border-top: 1px solid rgba(255, 255, 255, .12);
+}
+
+.admin-sidebar__item {
+  list-style: none;
+  margin: 0;
+}
+
+.admin-sidebar__logout {
+  margin-top: auto;
+  padding: 12px;
+}
+
+.admin-sidebar__logout-button {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255);
+  background: transparent;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-sidebar__logout-button:hover {
+  background: rgba(255, 255, 255, .10);
+}

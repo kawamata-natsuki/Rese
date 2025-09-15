@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
             ShopSeeder::class,
             TestUserSeeder::class,
             AdminUserSeeder::class,
-            AllShopsReviewSeeder::class,
+            // AllShopsReviewSeeder::class,
+            DemoDataSeeder::class,
         ]);
     }
 }

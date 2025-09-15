@@ -1,0 +1,49 @@
+:root {
+  --sb-width: 256px;
+  --brand-500: #2962ff;
+  --brand-700: #1e3a8a;
+
+  --text: #111827;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --hover: #f3f6ff;
+  --shadow-card: 0 12px 28px rgba(17, 24, 39, .08);
+}
+
+* {
+  box-sizing: border-box
+}
+
+body {
+  margin: 0;
+  font-family: "Noto Sans JP", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  color: var(--text);
+}
+
+/* 全体レイアウト */
+.admin-layout {
+  min-height: 100vh;
+}
+
+.admin-layout__main {
+  margin-left: var(--sb-width);
+  min-height: 100vh;
+  background: #f5f7fb;
+  /* 薄グレー */
+}
+
+.onepage {
+  --topbar-h: 56px;
+}
+
+/* 実際の高さに合わせて。必要なら 54〜60px で微調整 */
+.onepage .admin-topbar {
+  height: var(--topbar-h);
+}
+
+/* stickyでも高さを固定 */
+.onepage .admin-dashboard-page__container {
+  max-height: calc(100dvh - var(--topbar-h) - 1px);
+  /* ← この -1px が効く */
+  overflow: hidden;
+}

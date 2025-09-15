@@ -44,7 +44,6 @@
   </div>
 </div>
 
-
 <script>
   const INDEX_URL = @json(route('notifications.index'));
   const READ_URL = @json(route('notifications.read'));

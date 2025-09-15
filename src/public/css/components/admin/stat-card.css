@@ -1,0 +1,51 @@
+/* KPI：カードに戻す（横並び・省スペースレイアウト） */
+.admin-dashboard-page__stat-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  padding: 10px 12px;
+
+  /* レイアウト */
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 8px;
+  /* アイコン / ラベル / 値 */
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 80px;
+  /* 高さが欲しければ 90〜120px くらい */
+}
+
+.stat-card__icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+/* ラベルと値 */
+.admin-dashboard-page__stat-label-main {
+  font-weight: 700;
+  font-size: .9rem;
+}
+
+.admin-dashboard-page__stat-sub {
+  color: var(--muted);
+  font-size: .72rem;
+  letter-spacing: .04em;
+}
+
+.admin-dashboard-page__stat-count {
+  margin: 0;
+  font-weight: 800;
+  font-size: 1.6rem;
+  line-height: 1;
+}
