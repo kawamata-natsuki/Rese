@@ -16,214 +16,47 @@ class AdminDashboardController extends Controller
 {
     public function index()
     {
-        // === 期間設定（アプリTZ基準） ===
-        $tz    = config('app.timezone', 'Asia/Tokyo');
-        $end   = Carbon::now($tz)->endOfDay();            // 今日の終わり
-        $start = (clone $end)->subDays(29)->startOfDay(); // 30日分（過去29日 + 今日）
+        $range = $this->getLast30DaysRange();
 
-        // DBはUTC想定なので、境界をUTCに変換して渡す
-        $startUtc = $start->copy()->timezone('UTC');
-        $endUtc   = $end->copy()->timezone('UTC');
+        // 集計
+        $cards       = $this->getSummaryCards($range);
+        $timeseries  = $this->getTimeSeries($range);
+        $active      = $this->getActiveStats($range);
+        $pie         = $this->getAreaPieData($range);
+        $latest      = $this->getLatestEntities();
+        $avgRating30d = $this->getReviewAverage($range);
+        $shopStats   = $this->getShopStats($range);
 
-        // === カード（直近30日） ===
-        $users30d = User::whereBetween(
-            'created_at',
-            [
-                $startUtc,
-                $endUtc
-            ]
-        )->count();
-
-        $reservations30d = Reservation::whereBetween(
-            'created_at',
-            [
-                $startUtc,
-                $endUtc
-            ]
-        )->count();
-
-        $reviews30d = Review::whereBetween(
-            'created_at',
-            [
-                $startUtc,
-                $endUtc
-            ]
-        )->whereNull('deleted_at')->count();
-
-        // キャンセル予約（30日）
-        $cancelledReservations = Reservation::whereBetween('created_at', [$startUtc, $endUtc])
-            ->where('reservation_status', 'cancelled')
-            ->count();
-
-        // キャンセル率（%）
-        $cancellationRate = $reservations30d > 0
-            ? round(($cancelledReservations / $reservations30d) * 100, 1)
-            : 0;
-
-        // === 時系列（30日） ===
-        $labels = $this->makeDateLabels($start, $end); // ["Y-m-d", ...]
-
-        // 予約：結合日時 -> 日付で集計
-        $reservationsByDay = Reservation::selectRaw('reservation_date as d, COUNT(*) as c')
-            ->whereBetween('reservation_date', [$start->toDateString(), $end->toDateString()])
-            ->groupBy('reservation_date')
-            ->orderBy('reservation_date')
-            ->pluck('c', 'd')
-            ->all();
-
-        // レビュー／ユーザー：created_at -> 日付で集計（ローカル時刻基準）
-        $reviewsByDay = Review::selectRaw("DATE(created_at) as d, COUNT(*) as c")
-            ->whereBetween('created_at', [$startUtc, $endUtc])
-            ->groupBy('d')->orderBy('d')->pluck('c', 'd')->all();
-
-        $usersByDay = User::selectRaw("DATE(created_at) as d, COUNT(*) as c")
-            ->whereBetween('created_at', [$startUtc, $endUtc])
-            ->groupBy('d')->orderBy('d')->pluck('c', 'd')->all();
-
-        // ラベル順に0埋め
-        $seriesReservations = $this->fillSeriesByLabels($labels, $reservationsByDay);
-        $seriesReviews      = $this->fillSeriesByLabels($labels, $reviewsByDay);
-        $seriesUsers        = $this->fillSeriesByLabels($labels, $usersByDay);
-
-        // === アクティブ稼働率（直近30日 / 5件以上 / キャンセル除外） ===
-        $threshold = 5;
-
-        // 総店舗数（公開店舗だけにしたいなら where('published',1) など条件追加）
-        $totalShops = Shop::count();
-
-        // アクティブ店舗の shop_id を抽出
-        $activeShopIds = Reservation::query()
-            ->whereBetween('reservation_date', [$startUtc, $endUtc])
-            ->where('reservation_status', '!=', 'cancelled')
-            ->groupBy('shop_id')
-            ->havingRaw('COUNT(*) >= ?', [$threshold])
-            ->pluck('shop_id');
-
-        $activeShops = Shop::whereIn('id', $activeShopIds)->count();
-        $activeRate  = $totalShops > 0 ? round($activeShops / $totalShops * 100, 1) : 0.0;
-
-        // 休眠店舗（参考：画面右の小カードやリンクに便利）
-        $dormantShops = max($totalShops - $activeShops, 0);
-
-        // === 円グラフ（エリア別） ===
-        // 1) 店舗数
-        $areaShopCounts = Area::withCount('shops')->get();
-        $pieLabels    = $areaShopCounts->pluck('name')->all();
-        $pieDataShops = $areaShopCounts->pluck('shops_count')->map(fn($v) => (int)$v)->all();
-
-        // 2) 直近30日の予約数（エリア別） - reservations に reserved_at は無いので結合式で集計
-        $areaReservationCounts = DB::table('areas')
-            ->selectRaw('areas.name as area, COUNT(reservations.id) as cnt')
-            ->leftJoin('shops', 'shops.area_id', '=', 'areas.id')
-            ->leftJoin('reservations', function ($join) use ($startUtc, $endUtc) {
-                $join->on('reservations.shop_id', '=', 'shops.id')
-                    ->whereRaw(
-                        "STR_TO_DATE(CONCAT(reservations.reservation_date,' ',reservations.reservation_time), '%Y-%m-%d %H:%i:%s') BETWEEN ? AND ?",
-                        [$startUtc, $endUtc]
-                    );
-            })
-            ->groupBy('areas.id', 'areas.name')
-            ->orderBy('areas.id')
-            ->get();
-
-        $pieDataReservations = $areaReservationCounts->pluck('cnt')->map(fn($v) => (int)$v)->all();
-
-        // === 最新リスト（N+1防止） ===
-        $latestShopOwners = ShopOwner::latest()
-            ->take(1)
-            ->get(['id', 'name', 'email', 'created_at']);
-
-        $latestShops = Shop::latest()
-            ->take(1)
-            ->get(['id', 'name', 'shop_owner_id', 'created_at'])
-            ->load('shopOwner:id,name');
-
-        // ★ 直近30日の平均評価（deleted除外）
-        $ratingColumn = 'rating';
-        $avgRating30d = Review::whereBetween('created_at', [$startUtc, $endUtc])
-            ->whereNull('deleted_at')
-            ->avg($ratingColumn);
-
-        // null対策 & 範囲クリップ（1〜5想定。必要に応じて調整）
-        $avgRating30d = (float)($avgRating30d ?? 0.0);
-        $avgRating30d = max(0, min(5, $avgRating30d));
-
-        /* ----------------------------------------------------------------
-     * 2) Top Shops (30D) 予約数トップ5 + キャンセル率
-     *    - total: 期間内の予約件数
-     *    - cancelled: 期間内キャンセル件数
-     *    - cancel_rate: 小数1桁 %
-     * ---------------------------------------------------------------- */
-        $topShops30d = DB::table('shops')
-            ->leftJoin('reservations', function ($join) use ($startUtc, $endUtc) {
-                $join->on('reservations.shop_id', '=', 'shops.id')
-                    ->whereBetween('reservations.created_at', [$startUtc, $endUtc])
-                    ->whereNull('reservations.deleted_at');
-            })
-            ->whereNull('shops.deleted_at')
-            ->groupBy('shops.id', 'shops.name')
-            ->select(
-                'shops.id',
-                'shops.name',
-                DB::raw('COUNT(reservations.id) as total'),
-                DB::raw("SUM(CASE WHEN reservations.reservation_status = 'cancelled' THEN 1 ELSE 0 END) as cancelled")
-            )
-            ->orderByDesc('total')
-            ->limit(5)
-            ->get()
-            ->map(function ($row) {
-                $row->cancel_rate = $row->total > 0 ? round(($row->cancelled / $row->total) * 100, 1) : 0.0;
-                return $row;
-            });
-
-        /* ----------------------------------------------------------------
-     * 3) Inactive Shops (0 in 30D)
-     *    期間内予約が0件の店舗数（ソフトデリート除外）
-     * ---------------------------------------------------------------- */
-        $inactiveShops30d = DB::table('shops')
-            ->whereNull('shops.deleted_at')
-            ->whereNotExists(function ($q) use ($startUtc, $endUtc) {
-                $q->select(DB::raw(1))
-                    ->from('reservations')
-                    ->whereColumn('reservations.shop_id', 'shops.id')
-                    ->whereBetween('reservations.created_at', [$startUtc, $endUtc])
-                    ->whereNull('reservations.deleted_at');
-            })
-            ->count();
-
-        // === ビューへ ===
+        // ビューへ
         return view('admin.dashboard.index', [
             // 数字カード
-            'users30d'       => $users30d,
-            'reservations30d' => $reservations30d,
-            'reviews30d'     => $reviews30d,
-            'cancellationRate' => $cancellationRate,
-            'activeRate'        => $activeRate,
-            'activeShops'       => $activeShops,
-            'totalShops'        => $totalShops,
-            'dormantShops'      => $dormantShops,
-            'activeThreshold'   => $threshold,
+            'users30d'         => $cards['users30d'],
+            'reservations30d'  => $cards['reservations30d'],
+            'reviews30d'       => $cards['reviews30d'],
+            'cancellationRate' => $cards['cancellationRate'],
+
+            // 稼働率
+            'activeRate'      => $active['activeRate'],
+            'activeShops'     => $active['activeShops'],
+            'totalShops'      => $active['totalShops'],
+            'dormantShops'    => $active['dormantShops'],
+            'activeThreshold' => $active['activeThreshold'],
+
+            // レビュー平均
             'avgRating30d'    => $avgRating30d,
-            'topShops30d'       => $topShops30d,
-            'inactiveShops30d'  => $inactiveShops30d,
+
+            // ランキング等
+            'topShops30d'      => $shopStats['topShops30d'],
+            'inactiveShops30d' => $shopStats['inactiveShops30d'],
 
             // 最新
-            'latestShopOwners' => $latestShopOwners,
-            'latestShops'      => $latestShops,
+            'latestShopOwners' => $latest['latestShopOwners'],
+            'latestShops'      => $latest['latestShops'],
 
             // グラフ
             'charts' => [
-                'timeseries' => [
-                    'labels'       => $labels,
-                    'reservations' => $seriesReservations,
-                    'reviews'      => $seriesReviews,
-                    'users'        => $seriesUsers,
-                ],
-                'pie' => [
-                    'labels'           => $pieLabels,
-                    'shops'            => $pieDataShops,
-                    'reservations_30d' => $pieDataReservations,
-                ],
+                'timeseries' => $timeseries,
+                'pie'        => $pie,
             ],
         ]);
     }
@@ -256,5 +89,214 @@ class AdminDashboardController extends Controller
             $series[] = (int)($map[$d] ?? 0);
         }
         return $series;
+    }
+
+    /**
+     * 直近30日レンジ（アプリTZとUTC）
+     * @return array{tz:string,start:Carbon,end:Carbon,startUtc:Carbon,endUtc:Carbon}
+     */
+    private function getLast30DaysRange(): array
+    {
+        $tz    = config('app.timezone', 'Asia/Tokyo');
+        $end   = Carbon::now($tz)->endOfDay();
+        $start = (clone $end)->subDays(29)->startOfDay();
+
+        return [
+            'tz' => $tz,
+            'start' => $start,
+            'end' => $end,
+            'startUtc' => $start->copy()->timezone('UTC'),
+            'endUtc' => $end->copy()->timezone('UTC'),
+        ];
+    }
+
+    /**
+     * トップの数値カード
+     * @param array{startUtc:Carbon,endUtc:Carbon} $range
+     * @return array{users30d:int,reservations30d:int,reviews30d:int,cancellationRate:float}
+     */
+    private function getSummaryCards(array $range): array
+    {
+        $users30d = User::whereBetween('created_at', [$range['startUtc'], $range['endUtc']])->count();
+        $reservations30d = Reservation::whereBetween('created_at', [$range['startUtc'], $range['endUtc']])->count();
+        $reviews30d = Review::whereBetween('created_at', [$range['startUtc'], $range['endUtc']])
+            ->whereNull('deleted_at')
+            ->count();
+
+        $cancelledReservations = Reservation::whereBetween('created_at', [$range['startUtc'], $range['endUtc']])
+            ->where('reservation_status', 'cancelled')
+            ->count();
+
+        $cancellationRate = $reservations30d > 0
+            ? round(($cancelledReservations / $reservations30d) * 100, 1)
+            : 0.0;
+
+        return compact('users30d', 'reservations30d', 'reviews30d', 'cancellationRate');
+    }
+
+    /**
+     * 折れ線グラフ用データ
+     * @param array{start:Carbon,end:Carbon,startUtc:Carbon,endUtc:Carbon} $range
+     * @return array{labels:array,reservations:array,reviews:array,users:array}
+     */
+    private function getTimeSeries(array $range): array
+    {
+        $labels = $this->makeDateLabels($range['start'], $range['end']);
+
+        $reservationsByDay = Reservation::selectRaw('reservation_date as d, COUNT(*) as c')
+            ->whereBetween('reservation_date', [$range['start']->toDateString(), $range['end']->toDateString()])
+            ->groupBy('reservation_date')
+            ->orderBy('reservation_date')
+            ->pluck('c', 'd')
+            ->all();
+
+        $reviewsByDay = Review::selectRaw("DATE(created_at) as d, COUNT(*) as c")
+            ->whereBetween('created_at', [$range['startUtc'], $range['endUtc']])
+            ->groupBy('d')->orderBy('d')->pluck('c', 'd')->all();
+
+        $usersByDay = User::selectRaw("DATE(created_at) as d, COUNT(*) as c")
+            ->whereBetween('created_at', [$range['startUtc'], $range['endUtc']])
+            ->groupBy('d')->orderBy('d')->pluck('c', 'd')->all();
+
+        return [
+            'labels' => $labels,
+            'reservations' => $this->fillSeriesByLabels($labels, $reservationsByDay),
+            'reviews' => $this->fillSeriesByLabels($labels, $reviewsByDay),
+            'users' => $this->fillSeriesByLabels($labels, $usersByDay),
+        ];
+    }
+
+    /**
+     * 稼働率など
+     * @param array{start:Carbon,end:Carbon} $range
+     * @return array{activeRate:float,activeShops:int,totalShops:int,dormantShops:int,activeThreshold:int}
+     */
+    private function getActiveStats(array $range): array
+    {
+        $threshold = 5;
+
+        $totalShops = Shop::count();
+
+        $activeShopIds = Reservation::query()
+            ->whereBetween('reservation_date', [$range['start']->toDateString(), $range['end']->toDateString()])
+            ->where('reservation_status', '!=', 'cancelled')
+            ->groupBy('shop_id')
+            ->havingRaw('COUNT(*) >= ?', [$threshold])
+            ->pluck('shop_id');
+
+        $activeShops = Shop::whereIn('id', $activeShopIds)->count();
+        $activeRate  = $totalShops > 0 ? round($activeShops / $totalShops * 100, 1) : 0.0;
+        $dormantShops = max($totalShops - $activeShops, 0);
+
+        return compact('activeRate', 'activeShops', 'totalShops', 'dormantShops', 'activeThreshold');
+    }
+
+    /**
+     * エリア別円グラフ
+     * @param array{startUtc:Carbon,endUtc:Carbon} $range
+     * @return array{labels:array,shops:array,reservations_30d:array}
+     */
+    private function getAreaPieData(array $range): array
+    {
+        $areaShopCounts = Area::withCount('shops')->get();
+        $labels    = $areaShopCounts->pluck('name')->all();
+        $shopsData = $areaShopCounts->pluck('shops_count')->map(fn($v) => (int)$v)->all();
+
+        $areaReservationCounts = DB::table('areas')
+            ->selectRaw('areas.name as area, COUNT(reservations.id) as cnt')
+            ->leftJoin('shops', 'shops.area_id', '=', 'areas.id')
+            ->leftJoin('reservations', function ($join) use ($range) {
+                $join->on('reservations.shop_id', '=', 'shops.id')
+                    ->whereRaw(
+                        "STR_TO_DATE(CONCAT(reservations.reservation_date,' ',reservations.reservation_time), '%Y-%m-%d %H:%i:%s') BETWEEN ? AND ?",
+                        [$range['startUtc'], $range['endUtc']]
+                    );
+            })
+            ->groupBy('areas.id', 'areas.name')
+            ->orderBy('areas.id')
+            ->get();
+
+        $reservations30d = $areaReservationCounts->pluck('cnt')->map(fn($v) => (int)$v)->all();
+
+        return [
+            'labels' => $labels,
+            'shops' => $shopsData,
+            'reservations_30d' => $reservations30d,
+        ];
+    }
+
+    /**
+     * 最新エンティティ
+     * @return array{latestShopOwners:\Illuminate\Support\Collection,latestShops:\Illuminate\Support\Collection}
+     */
+    private function getLatestEntities(): array
+    {
+        $latestShopOwners = ShopOwner::latest()
+            ->take(1)
+            ->get(['id', 'name', 'email', 'created_at']);
+
+        $latestShops = Shop::latest()
+            ->take(1)
+            ->get(['id', 'name', 'shop_owner_id', 'created_at'])
+            ->load('shopOwner:id,name');
+
+        return compact('latestShopOwners', 'latestShops');
+    }
+
+    /**
+     * 30日平均評価
+     * @param array{startUtc:Carbon,endUtc:Carbon} $range
+     */
+    private function getReviewAverage(array $range): float
+    {
+        $avg = Review::whereBetween('created_at', [$range['startUtc'], $range['endUtc']])
+            ->whereNull('deleted_at')
+            ->avg('rating');
+
+        $avg = (float)($avg ?? 0.0);
+        return max(0, min(5, $avg));
+    }
+
+    /**
+     * トップ店舗と非稼働店舗数
+     * @param array{startUtc:Carbon,endUtc:Carbon} $range
+     * @return array{topShops30d:\Illuminate\Support\Collection,inactiveShops30d:int}
+     */
+    private function getShopStats(array $range): array
+    {
+        $topShops30d = DB::table('shops')
+            ->leftJoin('reservations', function ($join) use ($range) {
+                $join->on('reservations.shop_id', '=', 'shops.id')
+                    ->whereBetween('reservations.created_at', [$range['startUtc'], $range['endUtc']])
+                    ->whereNull('reservations.deleted_at');
+            })
+            ->whereNull('shops.deleted_at')
+            ->groupBy('shops.id', 'shops.name')
+            ->select(
+                'shops.id',
+                'shops.name',
+                DB::raw('COUNT(reservations.id) as total'),
+                DB::raw("SUM(CASE WHEN reservations.reservation_status = 'cancelled' THEN 1 ELSE 0 END) as cancelled")
+            )
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get()
+            ->map(function ($row) {
+                $row->cancel_rate = $row->total > 0 ? round(($row->cancelled / $row->total) * 100, 1) : 0.0;
+                return $row;
+            });
+
+        $inactiveShops30d = DB::table('shops')
+            ->whereNull('shops.deleted_at')
+            ->whereNotExists(function ($q) use ($range) {
+                $q->select(DB::raw(1))
+                    ->from('reservations')
+                    ->whereColumn('reservations.shop_id', 'shops.id')
+                    ->whereBetween('reservations.created_at', [$range['startUtc'], $range['endUtc']])
+                    ->whereNull('reservations.deleted_at');
+            })
+            ->count();
+
+        return compact('topShops30d', 'inactiveShops30d');
     }
 }
