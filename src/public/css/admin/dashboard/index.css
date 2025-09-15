@@ -334,7 +334,7 @@
 
 /* Topbar（必要最低限） */
 .admin-topbar {
-  background: #fff;
+
   border-bottom: 1px solid var(--line);
   padding: 12px 0;
   position: sticky;

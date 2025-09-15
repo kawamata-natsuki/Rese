@@ -41,6 +41,28 @@ body {
   height: var(--topbar-h);
 }
 
+/* 共通トップバーの背景をレイアウト背景に合わせる */
+.admin-topbar {
+  background: #f5f7fb;
+}
+
+/* 通知ベルの色とホバーを白背景前提からレイアウト基調色へ */
+.admin-topbar .header__bell-button {
+  background: transparent;
+}
+
+.admin-topbar .header__bell-button:hover {
+  background: var(--hover);
+}
+
+.admin-topbar .header__bell-button i {
+  color: var(--text);
+}
+
+.admin-topbar .header__bell.has-unread i {
+  color: #facc15;
+}
+
 /* stickyでも高さを固定 */
 .onepage .admin-dashboard-page__container {
   max-height: calc(100dvh - var(--topbar-h) - 1px);
