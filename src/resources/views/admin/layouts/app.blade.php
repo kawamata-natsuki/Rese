@@ -33,7 +33,7 @@
   </title>
 </head>
 
-<body class="{{ request()->routeIs('admin.dashboard.index') ? 'onepage' : '' }}">
+<body class="{{ request()->routeIs('admin.dashboard') ? 'onepage' : '' }}">
   <!-- フラッシュメッセージ -->
   @if (session('success') || session('error'))
   <div class="flash-message

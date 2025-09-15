@@ -18,8 +18,9 @@
     const labels = Array.isArray(ts.labels) ? ts.labels : [];
     const reservations = Array.isArray(ts.reservations) ? ts.reservations : [];
     const users = Array.isArray(ts.users) ? ts.users : [];
+    const reviews = Array.isArray(ts.reviews) ? ts.reviews : [];
 
-    const maxVal = Math.max(0, ...(reservations.length ? reservations : [0]), ...(users.length ? users : [0]));
+    const maxVal = Math.max(0, ...(reservations.length ? reservations : [0]), ...(users.length ? users : [0]), ...(reviews.length ? reviews : [0]));
     const suggestedMax = Math.max(8, Math.ceil(maxVal * 1.2));
 
     window.__adminCharts.line = new Chart(el.getContext('2d'), {
@@ -42,6 +43,16 @@
             data: users,
             borderColor: '#ff9800',
             backgroundColor: '#ff9800',
+            fill: false,
+            tension: 0,
+            pointRadius: 0,
+            pointHoverRadius: 4
+          },
+          {
+            label: 'reviews',
+            data: reviews,
+            borderColor: '#8e24aa',
+            backgroundColor: '#8e24aa',
             fill: false,
             tension: 0,
             pointRadius: 0,

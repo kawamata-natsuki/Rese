@@ -133,7 +133,7 @@ $topShops30d = isset($topShops30d) ? $topShops30d : collect();
     <section class="admin-dashboard-page__line">
       <div class="admin-dashboard-page__graph-panel">
         <div class="admin-dashboard-page__graph-panel-header">
-          <div class="admin-dashboard-page__latest-label">Reservations & Users – Last 30 Days</div>
+          <div class="admin-dashboard-page__latest-label">Reservations, Users & Reviews – Last 30 Days</div>
         </div>
         <div class="chart-box">
           <canvas
