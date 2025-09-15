@@ -11,7 +11,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Dashboard関連サービスをシングルトンとして登録
+        $this->app->singleton(\App\Services\Admin\StatisticsRepository::class);
+        $this->app->singleton(\App\Services\Admin\ChartDataService::class);
+        $this->app->singleton(\App\Services\Admin\DashboardService::class);
     }
 
     /**
