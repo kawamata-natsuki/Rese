@@ -44,8 +44,10 @@
   @endif
 
   <div class="admin-layout">
+    
     <x-admin.sidebar />
     <main class="admin-layout__main">
+      <x-admin.topbar :unread-count="$unreadCount ?? 0" />
       @yield('content')
     </main>
   </div>
