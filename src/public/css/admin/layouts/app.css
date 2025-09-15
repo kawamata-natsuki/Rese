@@ -29,24 +29,64 @@ body {
   margin-left: var(--sb-width);
   min-height: 100vh;
   background: #f5f7fb;
-  /* 薄グレー */
 }
 
 .onepage {
   --topbar-h: 56px;
 }
 
-/* 実際の高さに合わせて。必要なら 54〜60px で微調整 */
 .onepage .admin-topbar {
   height: var(--topbar-h);
 }
 
-/* 共通トップバーの背景をレイアウト背景に合わせる */
-.admin-topbar {
-  background: #f5f7fb;
+.onepage .admin-dashboard-page__container {
+  height: calc(100dvh - var(--topbar-h));
+  overflow: hidden;
 }
 
-/* 通知ベルの色とホバーを白背景前提からレイアウト基調色へ */
+/* ===== Topbar ===== */
+.admin-topbar {
+  background: #f5f7fb;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+/* Topbar 内側レイアウト（共通） */
+.admin-topbar__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 検索バー */
+.search-form__input {
+  height: 36px;
+  /* 明示的に高さを揃える */
+  line-height: 36px;
+  /* テキストも中央に来るように */
+}
+
+.search-form__reset-button {
+  margin-left: 8px;
+  /* ← ここで余白を追加 */
+  height: 28px;
+  line-height: 36px;
+  padding: 0 12px;
+}
+
+.admin-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* 通知ベル */
 .admin-topbar .header__bell-button {
   background: transparent;
 }
@@ -61,11 +101,4 @@ body {
 
 .admin-topbar .header__bell.has-unread i {
   color: #facc15;
-}
-
-/* stickyでも高さを固定 */
-.onepage .admin-dashboard-page__container {
-  max-height: calc(100dvh - var(--topbar-h) - 1px);
-  /* ← この -1px が効く */
-  overflow: hidden;
 }
