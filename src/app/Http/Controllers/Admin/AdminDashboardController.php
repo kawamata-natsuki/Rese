@@ -105,6 +105,9 @@ class AdminDashboardController extends Controller
         // 休眠店舗（参考：画面右の小カードやリンクに便利）
         $dormantShops = max($totalShops - $activeShops, 0);
 
+        // 総オーナー数
+        $totalShopOwners = ShopOwner::count();
+
         // === 円グラフ（エリア別） ===
         // 1) 店舗数
         $areaShopCounts = Area::withCount('shops')->get();
@@ -206,6 +209,7 @@ class AdminDashboardController extends Controller
             'avgRating30d'    => $avgRating30d,
             'topShops30d'       => $topShops30d,
             'inactiveShops30d'  => $inactiveShops30d,
+            'totalShopOwners'    => $totalShopOwners,
 
             // 最新
             'latestShopOwners' => $latestShopOwners,
