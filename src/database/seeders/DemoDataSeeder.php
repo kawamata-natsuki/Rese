@@ -103,23 +103,45 @@ class DemoDataSeeder extends Seeder
                 $reservationsToday->push($reservation);
             }
 
-            // --- レビュー作成 ---
-            // その日の予約の 30〜70% がレビュー投稿（0件の可能性も）
+            // --- ステータス割り当て（現実的な比率） ---
+            // 過去日: visited ~78%, cancelled ~12%, no-show ~10%
             if ($reservationsToday->isNotEmpty()) {
-                $ratio = (mt_rand(20, 80) + ($spikeDay ? 10 : 0)) / 100;
-                $pick  = max(0, (int) round($reservationsToday->count() * $ratio));
-                foreach ($reservationsToday->random($pick) as $r) {
-                    if ($r->review()->exists()) continue;
-                    Review::factory()->create([
-                        'reservation_id' => $r->id,
-                        'shop_id'        => $r->shop_id,
-                        'user_id'        => $r->user_id,
-                        'display_name'   => $r->user->name ?? 'ゲスト',
-                        // 予約日の1〜5日後くらいにレビュー投稿
-                        'created_at'     => $r->reservation_date
-                            ? Carbon::parse($r->reservation_date)->addDays(rand(0, 5))->setTime(rand(10, 22), rand(0, 59), 0)
-                            : $day->copy()->setTime(rand(12, 23), rand(0, 59), 0),
-                    ]);
+                $isPastDay = $day->lt(now()->startOfDay());
+                if ($isPastDay) {
+                    foreach ($reservationsToday as $r) {
+                        $rand = mt_rand(1, 100);
+                        if ($rand <= 78) {
+                            $starts = $r->startsAt();
+                            $r->update([
+                                'reservation_status' => \App\Enums\ReservationStatus::VISITED,
+                                'visited_at'         => $starts->copy()->addMinutes(rand(0, 90)),
+                            ]);
+                        } elseif ($rand <= 90) {
+                            $r->update(['reservation_status' => \App\Enums\ReservationStatus::CANCELLED]);
+                        } else {
+                            $r->update(['reservation_status' => \App\Enums\ReservationStatus::NO_SHOW]);
+                        }
+                    }
+                }
+
+                // --- レビュー作成（来店済みの一部に絞る） ---
+                $visited = $reservationsToday->filter(fn($r) => $r->reservation_status === \App\Enums\ReservationStatus::VISITED);
+                if ($visited->isNotEmpty()) {
+                    $ratio = (mt_rand(30, 60) + ($spikeDay ? 10 : 0)) / 100; // 30-60%
+                    $pick  = max(0, (int) round($visited->count() * $ratio));
+                    foreach ($visited->random($pick) as $r) {
+                        if ($r->review()->exists()) continue;
+                        Review::factory()->create([
+                            'reservation_id' => $r->id,
+                            'shop_id'        => $r->shop_id,
+                            'user_id'        => $r->user_id,
+                            'display_name'   => $r->user->name ?? 'ゲスト',
+                            // 予約日の1〜5日後くらいにレビュー投稿
+                            'created_at'     => $r->reservation_date
+                                ? Carbon::parse($r->reservation_date)->addDays(rand(0, 5))->setTime(rand(10, 22), rand(0, 59), 0)
+                                : $day->copy()->setTime(rand(12, 23), rand(0, 59), 0),
+                        ]);
+                    }
                 }
             }
         }
