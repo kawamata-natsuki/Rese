@@ -50,14 +50,21 @@ class AdminDashboardController extends Controller
             ]
         )->whereNull('deleted_at')->count();
 
-        // キャンセル予約（30日）
+        // キャンセル/無断キャンセル（30日）
         $cancelledReservations = Reservation::whereBetween('created_at', [$startUtc, $endUtc])
             ->where('reservation_status', 'cancelled')
+            ->count();
+        $noShowReservations = Reservation::whereBetween('created_at', [$startUtc, $endUtc])
+            ->where('reservation_status', 'no-show')
             ->count();
 
         // キャンセル率（%）
         $cancellationRate = $reservations30d > 0
             ? round(($cancelledReservations / $reservations30d) * 100, 1)
+            : 0;
+        // 無断キャンセル率（%）
+        $noShowRate = $reservations30d > 0
+            ? round(($noShowReservations / $reservations30d) * 100, 1)
             : 0;
 
         // === 時系列（30日） ===
@@ -66,6 +73,15 @@ class AdminDashboardController extends Controller
         // 予約：結合日時 -> 日付で集計
         $reservationsByDay = Reservation::selectRaw('reservation_date as d, COUNT(*) as c')
             ->whereBetween('reservation_date', [$start->toDateString(), $end->toDateString()])
+            ->groupBy('reservation_date')
+            ->orderBy('reservation_date')
+            ->pluck('c', 'd')
+            ->all();
+
+        // no-show：日別件数
+        $noShowByDay = Reservation::selectRaw("reservation_date as d, COUNT(*) as c")
+            ->whereBetween('reservation_date', [$start->toDateString(), $end->toDateString()])
+            ->where('reservation_status', 'no-show')
             ->groupBy('reservation_date')
             ->orderBy('reservation_date')
             ->pluck('c', 'd')
@@ -82,6 +98,26 @@ class AdminDashboardController extends Controller
 
         // ラベル順に0埋め
         $seriesReservations = $this->fillSeriesByLabels($labels, $reservationsByDay);
+        $seriesNoShowCount  = $this->fillSeriesByLabels($labels, $noShowByDay);
+
+        // no-show率（%）：no-show件数 / 予約総数 * 100
+        $seriesNoShowRate = [];
+        foreach ($seriesReservations as $i => $total) {
+            $ns = (int)($seriesNoShowCount[$i] ?? 0);
+            $seriesNoShowRate[] = $total > 0 ? round(($ns / $total) * 100, 1) : 0;
+        }
+        // no-show率 7日移動平均（端は利用可能な範囲で平均）
+        $seriesNoShowRateMA7 = [];
+        $window = 7;
+        $rollingSum = 0.0;
+        for ($i = 0; $i < count($seriesNoShowRate); $i++) {
+            $rollingSum += (float) $seriesNoShowRate[$i];
+            if ($i >= $window) {
+                $rollingSum -= (float) $seriesNoShowRate[$i - $window];
+            }
+            $den = min($i + 1, $window);
+            $seriesNoShowRateMA7[] = $den > 0 ? round($rollingSum / $den, 1) : 0.0;
+        }
         $seriesReviews      = $this->fillSeriesByLabels($labels, $reviewsByDay);
         $seriesUsers        = $this->fillSeriesByLabels($labels, $usersByDay);
 
@@ -94,7 +130,7 @@ class AdminDashboardController extends Controller
         // アクティブ店舗の shop_id を抽出
         $activeShopIds = Reservation::query()
             ->whereBetween('reservation_date', [$startUtc, $endUtc])
-            ->where('reservation_status', '!=', 'cancelled')
+            ->whereNotIn('reservation_status', ['cancelled', 'no-show'])
             ->groupBy('shop_id')
             ->havingRaw('COUNT(*) >= ?', [$threshold])
             ->pluck('shop_id');
@@ -107,6 +143,10 @@ class AdminDashboardController extends Controller
 
         // 総オーナー数
         $totalShopOwners = ShopOwner::count();
+
+        // 直近30日の新規店舗 / 新規オーナー
+        $shops30d = Shop::whereBetween('created_at', [$startUtc, $endUtc])->count();
+        $owners30d = ShopOwner::whereBetween('created_at', [$startUtc, $endUtc])->count();
 
         // === 円グラフ（エリア別） ===
         // 1) 店舗数
@@ -195,12 +235,16 @@ class AdminDashboardController extends Controller
             ->count();
 
         // === ビューへ ===
+        // 未読通知件数（ダミー: ここでは0を渡し、今後DB通知と連携）
+        $unreadCount = 0;
+
         return view('admin.dashboard.index', [
             // 数字カード
             'users30d'       => $users30d,
             'reservations30d' => $reservations30d,
             'reviews30d'     => $reviews30d,
             'cancellationRate' => $cancellationRate,
+            'noShowRate'       => $noShowRate,
             'activeRate'        => $activeRate,
             'activeShops'       => $activeShops,
             'totalShops'        => $totalShops,
@@ -210,6 +254,8 @@ class AdminDashboardController extends Controller
             'topShops30d'       => $topShops30d,
             'inactiveShops30d'  => $inactiveShops30d,
             'totalShopOwners'    => $totalShopOwners,
+            'shops30d'         => $shops30d,
+            'owners30d'        => $owners30d,
 
             // 最新
             'latestShopOwners' => $latestShopOwners,
@@ -222,6 +268,10 @@ class AdminDashboardController extends Controller
                     'reservations' => $seriesReservations,
                     'reviews'      => $seriesReviews,
                     'users'        => $seriesUsers,
+                    'noShowRate'   => $seriesNoShowRate,
+                    'noShowRateMA7' => $seriesNoShowRateMA7,
+                    'noShowCount'  => $seriesNoShowCount,
+                    'noShowRate30d' => $noShowRate,
                 ],
                 'pie' => [
                     'labels'           => $pieLabels,
@@ -229,6 +279,7 @@ class AdminDashboardController extends Controller
                     'reservations_30d' => $pieDataReservations,
                 ],
             ],
+            'unreadCount'        => $unreadCount,
         ]);
     }
 
