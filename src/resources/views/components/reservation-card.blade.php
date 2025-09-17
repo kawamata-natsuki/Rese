@@ -16,14 +16,20 @@ $hasReview = !is_null($reservation->review);
   @endif">
   <div class="reservation-card__header">
     <i class="
-      @if($isPast) fas fa-history
+      @if($isPast)
+        @if($reservation->reservation_status === \App\Enums\ReservationStatus::VISITED) fas fa-check-circle
+        @elseif($reservation->reservation_status === \App\Enums\ReservationStatus::CANCELLED) fas fa-ban
+        @elseif($reservation->reservation_status === \App\Enums\ReservationStatus::NO_SHOW) fas fa-exclamation-triangle
+        @else fas fa-history
+        @endif
       @elseif($reservation->reservation_date->isToday()) fas fa-calendar-day
       @else far fa-clock
       @endif reservation-card__icon"></i>
 
     <p class="reservation-card__title">
       @if($isPast)
-      <span class="badge badge--muted">完了</span>
+      @php $status = $reservation->reservation_status; @endphp
+      <span class="badge badge--muted">{{ $status->label() }}</span>
       @else
       予約 {{ $reservation->display_number }}
       @if($reservation->reservation_date->isToday())
@@ -73,8 +79,8 @@ $hasReview = !is_null($reservation->review);
   </div>
   @endif
 
-  {{-- 過去：レビュー導線（レビュー未投稿のときだけ表示） --}}
-  @if($isPast && !$hasReview)
+  {{-- レビュー導線：来店済み（VISITED）かつ未レビューのみ表示 --}}
+  @if($reservation->reservation_status === \App\Enums\ReservationStatus::VISITED && !$hasReview)
   <div class="reservation-card__actions">
     <a class="reservation-card__button"
       href="{{ route('user.reviews.create', $reservation) }}">
