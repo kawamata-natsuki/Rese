@@ -18,9 +18,15 @@
     const labels = Array.isArray(ts.labels) ? ts.labels : [];
     const reservations = Array.isArray(ts.reservations) ? ts.reservations : [];
     const users = Array.isArray(ts.users) ? ts.users : [];
+    const noShowRateMA7 = Array.isArray(ts.noShowRateMA7) ? ts.noShowRateMA7 : [];
 
-    const maxVal = Math.max(0, ...(reservations.length ? reservations : [0]), ...(users.length ? users : [0]));
-    const suggestedMax = Math.max(8, Math.ceil(maxVal * 1.2));
+    // 件数系（reservations/users）の最大を基準に軸スケールを決定
+    const maxCount = Math.max(0,
+      ...(reservations.length ? reservations : [0]),
+      ...(users.length ? users : [0])
+    );
+    const suggestedMaxCount = Math.max(8, Math.ceil(maxCount * 1.2));
+    const suggestedMaxPct = 100; // 率は常に0-100%
 
     window.__adminCharts.line = new Chart(el.getContext('2d'), {
       type: 'line',
@@ -30,22 +36,36 @@
           {
             label: 'reservations',
             data: reservations,
-            borderColor: '#2962ff',
-            backgroundColor: '#2962ff',
+            borderColor: '#60a5fa',
+            backgroundColor: '#60a5fa',
             fill: false,
             tension: 0,
             pointRadius: 0,
-            pointHoverRadius: 4
+            pointHoverRadius: 4,
+            yAxisID: 'y'
           },
           {
             label: 'users',
             data: users,
-            borderColor: '#ff9800',
-            backgroundColor: '#ff9800',
+            borderColor: '#f59e0b',
+            backgroundColor: '#f59e0b',
             fill: false,
             tension: 0,
             pointRadius: 0,
-            pointHoverRadius: 4
+            pointHoverRadius: 4,
+            yAxisID: 'y'
+          },
+          {
+            label: 'no-show % (7DMA)',
+            data: noShowRateMA7,
+            borderColor: '#ec407a',
+            backgroundColor: '#ec407a',
+            fill: false,
+            borderWidth: 3,
+            tension: 0,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            yAxisID: 'y1'
           }
         ]
       },
@@ -60,16 +80,29 @@
           },
           y: {
             beginAtZero: true,
-            suggestedMax,
+            suggestedMax: suggestedMaxCount,
             grid: { color: 'rgba(0,0,0,.06)' },
-            ticks: { callback: v => `${v}件` }
+            ticks: { callback: v => String(v) }
+          },
+          y1: {
+            beginAtZero: true,
+            position: 'right',
+            suggestedMax: suggestedMaxPct,
+            grid: { drawOnChartArea: false },
+            ticks: {
+              callback: v => `${v}%`
+            }
           }
         },
         plugins: {
           legend: { display: true, position: 'bottom' },
           tooltip: {
             callbacks: {
-              label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y ?? 0} 件`
+              label: (ctx) => {
+                const v = ctx.parsed.y ?? 0;
+                if (ctx.dataset.label.includes('no-show %')) return `${ctx.dataset.label}: ${v}%`;
+                return `${ctx.dataset.label}: ${v}`;
+              }
             }
           }
         }
@@ -160,6 +193,90 @@
   function boot() {
     initLineFromEl(document.getElementById('line-trend'));
     initPieFromEl(document.getElementById('pie-area'));
+    // Admin global search
+    try {
+      const input = document.getElementById('admin-global-search');
+      const panel = document.getElementById('admin-search-panel');
+      let aborter = null;
+      const render = (data, q) => {
+        if (!panel) return;
+        const sections = ['shops', 'owners', 'users', 'reservations', 'reviews'];
+        let total = 0;
+        sections.forEach(key => {
+          const section = panel.querySelector(`.admin-search-panel__section[data-section="${key}"]`);
+          const ul = panel.querySelector(`.admin-search-panel__section[data-section="${key}"] .admin-search-panel__list`);
+          if (!ul || !section) return;
+          ul.innerHTML = '';
+          const items = (data[key] || []);
+          total += items.length;
+          items.forEach(item => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = item.url || '#';
+            a.innerHTML = `<i class="${item.icon || ''}"></i><span>${item.label}</span><small style="color:#6b7280">${item.sub || ''}</small>`;
+            li.appendChild(a);
+            ul.appendChild(li);
+          });
+          section.hidden = items.length === 0;
+        });
+        const empty = panel.querySelector('.admin-search-panel__empty');
+        if (empty) {
+          empty.textContent = q && q.length ? `No results for "${q}"` : 'No results';
+          empty.hidden = total > 0;
+        }
+        panel.hidden = false;
+      };
+      const fetcher = async (q) => {
+        if (!panel) return;
+        if (aborter) aborter.abort();
+        aborter = new AbortController();
+        const res = await fetch(`/admin/search?q=${encodeURIComponent(q)}`, { signal: aborter.signal });
+        const json = await res.json();
+        render(json, q);
+      };
+      if (input && panel) {
+        // 入力中はAJAX検索。フォーム送信は無効化
+        const form = document.getElementById('search-form');
+        if (form) {
+          form.addEventListener('submit', (e) => e.preventDefault());
+        }
+        input.addEventListener('input', () => {
+          const q = input.value.trim();
+          if (q.length === 0) {
+            panel.hidden = true;
+            return;
+          }
+          fetcher(q).catch(() => { });
+        });
+        // Enterで先頭の検索結果に遷移
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const first = panel.querySelector('.admin-search-panel__section:not([hidden]) .admin-search-panel__list a');
+            if (first) {
+              window.location.href = first.getAttribute('href') || '#';
+              panel.hidden = true;
+            } else {
+              // ヒットなしの明示表示
+              const empty = panel.querySelector('.admin-search-panel__empty');
+              if (empty) {
+                const q = input.value.trim();
+                empty.textContent = q.length ? `No results for "${q}"` : 'No results';
+                empty.hidden = false;
+              }
+              panel.hidden = false;
+            }
+          }
+        });
+        document.addEventListener('click', (e) => {
+          if (!panel.contains(e.target) && e.target !== input) {
+            panel.hidden = true;
+          }
+        });
+      }
+    } catch (e) {
+      // noop
+    }
     requestAnimationFrame(() => {
       window.__adminCharts.line?.resize?.();
       window.__adminCharts.pie?.resize?.();
@@ -169,3 +286,4 @@
   if (document.readyState !== 'loading') boot();
   else document.addEventListener('DOMContentLoaded', boot);
 })();
+
