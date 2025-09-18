@@ -30,6 +30,13 @@ class ReviewFactory extends Factory
         // ★ 長さ制御（必要なら display_name も）
         $displayName = $reservation->user->name ?? $this->faker->name();
 
+        // シード整合: レビューがある予約は来店済みに
+        if (!$reservation->visited_at) {
+            $reservation->visited_at = $reservationAt->copy()->addHours(rand(0, 3));
+            $reservation->reservation_status = \App\Enums\ReservationStatus::VISITED;
+            $reservation->save();
+        }
+
         return [
             'reservation_id' => $reservation->id,
             'shop_id'        => $reservation->shop_id,
