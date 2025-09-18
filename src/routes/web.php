@@ -3,7 +3,9 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\AdminShopController;
+use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\AdminShopOwnerController;
+use App\Http\Controllers\Admin\AdminGlobalSearchController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Shop\CheckinController;
 use App\Http\Controllers\Auth\LoginController;
@@ -145,9 +147,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
 
+        // 横断検索（AJAX）
+        Route::get('/search', AdminGlobalSearchController::class)
+            ->name('search');
+
         // 店舗
         Route::get('/shops/index',  [AdminShopController::class, 'index'])
             ->name('shops.index');
+        // 通知API
+        Route::prefix('api')->group(function () {
+            Route::get('notifications/unread-count', [AdminNotificationController::class, 'unreadCount']);
+            Route::get('notifications', [AdminNotificationController::class, 'index']);
+            Route::post('notifications/mark-all-read', [AdminNotificationController::class, 'markAllRead']);
+            Route::post('notifications/{notification}/read', [AdminNotificationController::class, 'markRead']);
+        });
         Route::get('/shops/create', [AdminShopController::class, 'create'])
             ->name('shops.create');
         Route::post('/shops/store', [AdminShopController::class, 'create'])
