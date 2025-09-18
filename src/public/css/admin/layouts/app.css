@@ -2,6 +2,7 @@
   --sb-width: 256px;
   --brand-500: #2962ff;
   --brand-700: #1e3a8a;
+  --container-max: 1020px;
 
   --text: #111827;
   --muted: #6b7280;
@@ -58,7 +59,7 @@ body {
 
 /* Topbar 内側レイアウト（共通） */
 .admin-topbar__inner {
-  max-width: 1200px;
+  max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
