@@ -10,6 +10,7 @@ class MypageController extends Controller
 {
     public function index(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         // 今日と現在時刻（文字列）
@@ -36,11 +37,15 @@ class MypageController extends Controller
                 return $r;
             });
 
-        // ===== 過去の予約（= VISITED すべて ＋ RESERVED で過去のもの）=====
+        // ===== 過去の予約（= VISITED / NO_SHOW / CANCELLED すべて ＋ RESERVED で過去のもの）=====
         $pastReservations = $user->reservations()
             ->where(function ($q) use ($today, $nowHms) {
-                // 来店済みはすべて過去扱い
-                $q->where('reservation_status', ReservationStatus::VISITED)
+                // 来店済み/無断キャンセル/キャンセルはすべて過去扱い
+                $q->whereIn('reservation_status', [
+                    ReservationStatus::VISITED,
+                    ReservationStatus::NO_SHOW,
+                    ReservationStatus::CANCELLED,
+                ])
                     // もしくは、まだRESERVEDだが期日・時刻を過ぎたもの
                     ->orWhere(function ($q2) use ($today, $nowHms) {
                         $q2->where('reservation_status', ReservationStatus::RESERVED)
