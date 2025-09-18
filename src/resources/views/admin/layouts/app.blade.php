@@ -44,7 +44,7 @@
   @endif
 
   <div class="admin-layout">
-    
+
     <x-admin.sidebar />
     <main class="admin-layout__main">
       <x-admin.topbar :unread-count="$unreadCount ?? 0" />
@@ -52,6 +52,10 @@
     </main>
   </div>
 
+  <script>
+    // CSRF を fetch で使う場合
+    window.csrfToken = '{{ csrf_token() }}';
+  </script>
   <script>
     // フラッシュメッセージをフェードアウト
     setTimeout(() => {
@@ -85,7 +89,126 @@
       });
   </script>
 
+  <script>
+    // サイドバーのアコーディオンを単一オープンにする
+    (function() {
+      const sidebar = document.querySelector('.admin-sidebar');
+      if (!sidebar) return;
+      sidebar.addEventListener('toggle', function(e) {
+        const target = e.target;
+        if (!target || !(target instanceof HTMLDetailsElement)) return;
+        if (!target.classList.contains('admin-accordion')) return;
+        if (target.open) {
+          sidebar.querySelectorAll('details.admin-accordion[open]').forEach(function(el) {
+            if (el !== target) {
+              el.removeAttribute('open');
+            }
+          });
+        }
+      }, true);
+    })();
+  </script>
+
   @stack('scripts')
+  <script>
+    // 管理者通知（簡易ポーリング + リスト描画）
+    (function() {
+      const bell = document.querySelector('.header__bell');
+      const badge = document.querySelector('.header__bell-badge');
+      const btnMarkAll = document.querySelector('.header__bell-markall');
+      const list = document.getElementById('admin-bell-list');
+      const empty = document.getElementById('admin-bell-empty');
+      if (!bell) return;
+
+      async function fetchUnread() {
+        try {
+          const res = await fetch('/admin/api/notifications/unread-count', {
+            credentials: 'same-origin'
+          });
+          const json = await res.json();
+          const n = json.unread ?? 0;
+          if (n > 0) {
+            bell.classList.add('has-unread');
+            if (badge) {
+              badge.textContent = n;
+              badge.hidden = false;
+            }
+          } else {
+            bell.classList.remove('has-unread');
+            if (badge) {
+              badge.textContent = '';
+              badge.hidden = true;
+            }
+          }
+        } catch (_) {}
+      }
+
+      if (btnMarkAll) {
+        btnMarkAll.addEventListener('click', async () => {
+          try {
+            await fetch('/admin/api/notifications/mark-all-read', {
+              method: 'POST',
+              headers: {
+                'X-CSRF-TOKEN': window.csrfToken
+              },
+              credentials: 'same-origin'
+            });
+            fetchUnread();
+            fetchList();
+          } catch (_) {}
+        });
+      }
+
+      async function fetchList(page = 1) {
+        try {
+          const res = await fetch(`/admin/api/notifications?page=${page}`, {
+            credentials: 'same-origin'
+          });
+          const json = await res.json();
+          const items = Array.isArray(json.data) ? json.data : [];
+          if (list) list.innerHTML = '';
+          if (!items.length) {
+            if (empty) empty.hidden = false;
+            return;
+          }
+          if (empty) empty.hidden = true;
+          items.forEach(n => {
+            const li = document.createElement('li');
+            li.className = `header__bell-item ${!n.read_at ? 'is-unread' : ''}`;
+            const a = document.createElement('a');
+            a.href = n.url || '#';
+            a.innerHTML = `
+              <div class="header__bell-item-title">${!n.read_at ? '<span class=\"dot\"></span>' : ''}${n.title || ''}</div>
+              ${n.message ? `<div class=\"header__bell-item-msg\">${n.message}</div>` : ''}
+              <div class="header__bell-item-time">${new Date(n.created_at || Date.now()).toLocaleString()}</div>
+            `;
+            li.appendChild(a);
+            list?.appendChild(li);
+          });
+        } catch (_) {}
+      }
+
+      fetchUnread();
+      fetchList();
+      setInterval(fetchUnread, 30000); // 30秒毎
+
+      // クリック外でドロップダウンを閉じる
+      document.addEventListener('click', (e) => {
+        if (!bell) return;
+        const t = e.target;
+        if (bell.hasAttribute('open') && t && !bell.contains(t)) {
+          bell.removeAttribute('open');
+        }
+      });
+
+      // Escキーで閉じる
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && bell && bell.hasAttribute('open')) {
+          bell.removeAttribute('open');
+        }
+      });
+    })();
+  </script>
   @yield('js')
 </body>
 
