@@ -40,18 +40,19 @@
         </details>
       </li>
 
-      <!-- Shops：縦展開 -->
+      <!-- Shops -->
       <li class="admin-sidebar__item">
         <details class="admin-accordion" {{ request()->routeIs('admin.shops.*') ? 'open' : '' }}>
           <summary class="admin-sidebar__summary">
-            <i class="fas fa-store"></i><span>Shops</span>
+            <i class="fas fa-store sidebar-icon"></i>
+            <span class="admin-sidebar__text">Shops</span>
             <i class="fas fa-chevron-down chev" aria-hidden="true"></i>
           </summary>
-          <ul class="admin-submenu admin-submenu--inline">
+          <ul class="admin-submenu">
             <li><a href="{{ route('admin.shops.index') }}"
-                class="{{ request()->routeIs('admin.shops.index') ? 'is-current' : '' }}">Shops List</a></li>
+                class="{{ request()->routeIs('admin.shops.index') ? 'is-current' : '' }} admin-submenu--inline">Shops List</a></li>
             <li><a href="{{ route('admin.shops.create') }}"
-                class="{{ request()->routeIs('admin.shops.create') ? 'is-current' : '' }}">Create New Shop</a></li>
+                class="{{ request()->routeIs('admin.shops.create') ? 'is-current' : '' }} admin-submenu--inline">Create New Shop</a></li>
           </ul>
         </details>
       </li>
@@ -62,7 +63,8 @@
         <li class="admin-sidebar__item">
           <a class="admin-sidebar__link {{ request()->routeIs('admin.account') ? 'is-active' : '' }}"
             href="{{ ('###') }}">
-            <i class="fas fa-user"></i><span>Account</span>
+            <i class="fas fa-user sidebar-icon"></i>
+            <span class="admin-sidebar__text">Account</span>
           </a>
         </li>
       </ul>

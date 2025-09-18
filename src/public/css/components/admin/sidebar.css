@@ -73,7 +73,7 @@
 
 /* ナビゲーションリンク */
 .admin-sidebar__link,
-.admin-sidebar__summar {
+.admin-sidebar__summary {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -150,18 +150,17 @@ details[open] .chev {
 .admin-submenu {
   list-style: none;
   margin: 0;
-  padding: 0;
+  /* 見出しアイコン(28px) + ギャップ(12px) + 余白(12px) に揃える */
+  padding: 6px 12px 8px 52px;
 }
 
 .admin-submenu--inline {
-  padding: 6px 0 8px 52px;
-  margin-bottom: 8px;
   display: block;
-  padding: 10px 0;
-  /* 横幅いっぱい・下に並ぶだけ */
+  padding: 8px 0;
+  margin: 0;
   color: var(--sb-subtext);
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .admin-submenu--inline li {
@@ -169,7 +168,6 @@ details[open] .chev {
   margin: 0;
 }
 
-.admin-submenu--inline a {}
 
 .admin-submenu--inline:hover {
   background: var(--sb-hover);
@@ -178,6 +176,11 @@ details[open] .chev {
 .admin-submenu--inline.is-current {
   background: rgba(255, 255, 255, .14);
   color: #fff;
+}
+
+/* オプション: 右寄せにしたい場合に付与 */
+.admin-submenu--right {
+  text-align: right;
 }
 
 /* ログアウト（既存） */
@@ -208,4 +211,9 @@ details[open] .chev {
 
 .admin-sidebar__logout-button:hover {
   background: rgba(255, 255, 255, .10);
+}
+
+/* 視覚調整: fa-store は相対的に大きく見えやすいため微縮小 */
+.admin-sidebar .sidebar-icon.fa-store {
+  font-size: 0.9rem;
 }
