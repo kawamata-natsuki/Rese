@@ -60,7 +60,7 @@ class ReservationController extends Controller
         }
 
         // ステータスをキャンセルに更新
-        $reservation->reservation_status = ReservationStatus::CANCELED;
+        $reservation->reservation_status = ReservationStatus::CANCELLED;
         $reservation->save();
 
         return redirect()->back()->with('success', '予約をキャンセルしました');
