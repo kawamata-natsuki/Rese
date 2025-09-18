@@ -1,3 +1,56 @@
+/* Admin global search dropdown */
+.admin-search-panel {
+  position: absolute;
+  z-index: 60;
+  margin-top: 6px;
+  width: min(860px, 96vw);
+  max-height: 60vh;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(17, 24, 39, .14);
+}
+
+.admin-search-panel__section {
+  padding: 8px 10px;
+}
+
+.admin-search-panel__empty {
+  padding: 12px;
+  color: #6b7280;
+}
+
+.admin-search-panel__title {
+  font-weight: 700;
+  font-size: .9rem;
+  color: #111827;
+  margin: 4px 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-search-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-search-panel__list li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  text-decoration: none;
+  color: #111827;
+  border-radius: 6px;
+}
+
+.admin-search-panel__list li a:hover {
+  background: #f3f4f6;
+}
+
 /* ==========================
    ヘッダー
 ========================== */
