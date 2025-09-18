@@ -17,8 +17,8 @@
         :value="$users30d" />
       <x-admin.stat-card
         icon="fas fa-calendar-check"
-        bg="var(--pill-pink)"
-        fg="var(--pill-pink-fore)"
+        bg="var(--pill-sky)"
+        fg="var(--pill-sky-fore)"
         label="RESERVATIONS"
         sublabel="30D"
         :value="$reservations30d" />
@@ -31,22 +31,22 @@
         :value="$reviews30d" />
       <x-admin.stat-card
         icon="fas fa-exclamation-triangle"
-        bg="var(--pill-indigo)"
-        fg="var(--pill-indigo-fore)"
+        bg="var(--pill-pink)"
+        fg="var(--pill-pink-fore)"
         label="NO-SHOW %"
         sublabel="30D"
         :value="$fmtPercent($noShowRate)" />
       <x-admin.stat-card
         icon="fas fa-store"
-        bg="var(--pill-sky)"
-        fg="var(--pill-sky-fore)"
+        bg="var(--pill-teal)"
+        fg="var(--pill-teal-fore)"
         label="SHOPS"
         sublabel="30D"
         :value="number_format($shops30d ?? 0)" />
       <x-admin.stat-card
         icon="fas fa-user-tie"
-        bg="var(--pill-teal)"
-        fg="var(--pill-teal-fore)"
+        bg="var(--pill-indigo)"
+        fg="var(--pill-indigo-fore)"
         label="OWNERS"
         sublabel="30D"
         :value="number_format($owners30d ?? 0)" />
