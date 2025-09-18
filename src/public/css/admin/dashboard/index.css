@@ -6,16 +6,16 @@
   --shadow-card: 0 12px 28px rgba(17, 24, 39, .08);
 
   --sb-width: 260px;
-  --container-max: 1280px;
+  --container-max: 1020px;
 
   /* ===== 1画面に収める高さ配分（必要に応じて微調整） ===== */
   --hero-h: 10vh;
   /* ヒーロー */
   --stats-h: 13vh;
   /* KPI */
-  --line-h: 28vh;
+  --line-h: 34vh;
   /* 折れ線 */
-  --bottom-h: 26vh;
+  --bottom-h: 20vh;
   /* 下段（円／右カラム） */
   --pill-emerald: #dcfce7;
   --pill-emerald-fore: #065f46;
@@ -27,12 +27,17 @@
   --pill-pink-fore: #9d174d;
   --pill-violet: #ede9fe;
   --pill-violet-fore: #5b21b6;
+  --pill-indigo: #e0e7ff;
+  --pill-indigo-fore: #3730a3;
+  --pill-teal: #ccfbf1;
+  --pill-teal-fore: #115e59;
+  --pill-lime: #ecfccb;
+  --pill-lime-fore: #3f6212;
 
   --cal-primary: #ff7b7b;
   --cal-back-1: #3b82f6;
   --cal-back-2: #60a5fa;
   --cal-w: 56px;
-  /* 64→少し小さめにしてHeroの高さに収める */
   --cal-h: 66px;
   --cal-radius: 14px;
 }
@@ -41,20 +46,17 @@
 .admin-dashboard-page__container {
   max-width: var(--container-max);
   width: 100%;
-  /* 左右20pxのガターを確保しつつ、見た目の中央に */
-  margin-left: calc(max(20px, (100vw - var(--sb-width) - var(--container-max)) / 2 + 20px));
-  margin-right: 20px;
-  padding-inline: 0;
+  margin: 0 auto;
+  padding-inline: 20px;
   box-sizing: border-box;
 
   display: grid;
   gap: 14px;
-  grid-template-columns: minmax(0, 2fr) minmax(340px, 1fr);
+  grid-template-columns: 1.6fr 1fr;
   grid-template-areas:
-    "hero   hero"
-    "stats  stats"
-    "line   line"
-    "pie    latest";
+    "hero  hero"
+    "stats pie"
+    "line  line";
 }
 
 /* セクション割り当て */
@@ -72,11 +74,8 @@
 
 .admin-dashboard-page__pie {
   grid-area: pie;
-  align-self: start;
-}
-
-.latest-panels {
-  grid-area: latest;
+  align-self: stretch;
+  height: 100%;
 }
 
 /* ===== Hero ===== */
@@ -94,7 +93,7 @@
   grid-template-columns: auto 1fr;
   align-items: center;
   gap: 36px;
-  padding: 12px 16px;
+  padding: 8px 16px;
   align-items: start;
 }
 
@@ -103,78 +102,6 @@
   grid-template-columns: 1fr minmax(240px, 320px);
   align-items: stretch;
   gap: 16px;
-}
-
-.admin-hero__mini {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.mini-card {
-  background: #fff;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  box-shadow: var(--shadow-card);
-  padding: 12px;
-}
-
-.mini-card__row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 10px;
-}
-
-.mini-card__left {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.mini-card__right {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.mini-card__head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  justify-content: center;
-}
-
-.mini-card__main {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 8px;
-  margin: 6px 0 10px;
-}
-
-.mini-card__total {
-  font-size: 28px;
-  font-weight: 800;
-}
-
-.mini-card__delta {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.mini-card__actions {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-}
-
-.mini-card .btn {
-  height: 32px;
-  line-height: 32px;
-  padding: 0 12px;
-  border-radius: 8px;
 }
 
 /* カレンダーバッジ */
@@ -197,7 +124,7 @@
   flex: none;
   align-self: center;
   transform: translateY(-6px);
-  padding-top: 6px;
+  padding-top: 10px;
 }
 
 .calendar-badge::before,
@@ -211,7 +138,7 @@
 
 .calendar-badge::before {
   background: var(--cal-back-1, #3a79ff);
-  transform: translate(10px, 12px) rotate(6deg);
+  transform: translate(10px, 14px) rotate(12deg);
   filter: blur(.2px);
 }
 
@@ -222,7 +149,7 @@
 }
 
 .calendar-badge__month {
-  font-size: .72rem;
+  font-size: .68rem;
   letter-spacing: .22em;
   opacity: .95;
 }
@@ -234,12 +161,18 @@
 }
 
 .calendar-badge__weekday {
-  font-size: .62rem;
+  font-size: .58rem;
   letter-spacing: .18em;
   opacity: .95;
 }
 
 /* テキスト */
+.admin-hero__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .admin-hero__title {
   margin: 0 0 6px;
   font-size: clamp(20px, 2.8vw, 28px);
@@ -258,20 +191,59 @@
   gap: 12px;
 }
 
-.pair {
+.admin-hero__mini {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mini-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  padding: 8% 12px;
+  gap: 4px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 700;
+  justify-content: center;
+}
+
+.mini-card__top {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
-.pair__chip {
+.mini-card__bottom {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.mini-card__total {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.mini-card__delta {
   font-size: 12px;
   color: var(--muted);
-  background: #f5f7ff;
-  border: 1px solid #e6eaff;
-  padding: 3px 10px;
-  border-radius: 999px;
-  line-height: 1;
+}
+
+.mini-card__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.mini-card .btn {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
 }
 
 /* Buttons */
@@ -313,7 +285,7 @@
 .admin-dashboard-page__stats {
   display: grid;
   gap: 18px;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   justify-items: stretch;
 }
 
@@ -333,12 +305,16 @@
   height: var(--line-h);
   background: #fff;
   min-height: 0;
+  /* 右軸ラベルと下の凡例が見切れないように余白追加 */
+  padding: 8px 24px 24px 12px;
 }
 
 .admin-dashboard-page__pie .chart-box {
   position: relative;
-  height: var(--bottom-h);
+  height: 100%;
   background: #fff;
+  padding: 12px;
+  /* 内側余白を追加して円グラフの縁を避ける */
 }
 
 .chart-box canvas {
@@ -349,6 +325,16 @@
   display: block;
 }
 
+/* 円グラフは12pxの内側余白ぶんを反映 */
+.admin-dashboard-page__pie .chart-box canvas {
+  inset: 12px;
+}
+
+/* 折れ線は右/下を広めに */
+.admin-dashboard-page__line .chart-box canvas {
+  inset: 8px 24px 24px 12px;
+}
+
 .admin-dashboard-page__graph-panel {
   background: #fff;
   border: 1px solid var(--line);
@@ -356,6 +342,7 @@
   box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .admin-dashboard-page__graph-panel-header {
@@ -367,7 +354,7 @@
 /* 右カラム：上下2分割・内部スクロール */
 .latest-panels {
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
   height: var(--bottom-h);
   min-height: 0;
@@ -498,9 +485,17 @@
     grid-template-areas:
       "hero"
       "stats"
-      "line"
       "pie"
-      "latest";
+      "line";
+  }
+
+  /* モバイルでは固定の高さに戻す */
+  .admin-dashboard-page__pie {
+    height: auto;
+  }
+
+  .admin-dashboard-page__pie .chart-box {
+    height: var(--bottom-h);
   }
 
   .admin-dashboard-page__stats {

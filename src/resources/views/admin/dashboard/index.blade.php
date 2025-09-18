@@ -18,25 +18,19 @@
   <div class="admin-dashboard-page__container">
 
     {{-- Hero --}}
-    @include('admin.dashboard.partials.hero')
+    @include('admin.dashboard.partials.hero', [
+    'totalShops' => $totalShops,
+    'totalShopOwners' => $totalShopOwners,
+    ])
 
-    {{-- KPI 6枚 --}}
+    {{-- KPI 8枚 --}}
     @include('admin.dashboard.partials.stats')
 
-    {{-- 折れ線 --}}
-    @include('admin.dashboard.partials.linechart')
-
-    {{-- 円グラフ --}}
+    {{-- 円グラフ（KPIの隣） --}}
     @include('admin.dashboard.partials.piechart')
 
-    {{-- 右：Top / Inactive （上下2分割） --}}
-    <section class="latest-panels">
-      {{-- Top Shops (30D) --}}
-      @include('admin.dashboard.partials.topshops')
-
-      {{-- Inactive Shops (30D) --}}
-      @include('admin.dashboard.partials.inactive')
-    </section>
+    {{-- 折れ線（下段） --}}
+    @include('admin.dashboard.partials.linechart')
 
   </div>
 </div>
