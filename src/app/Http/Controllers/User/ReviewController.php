@@ -7,6 +7,8 @@ use App\Models\Reservation;
 use App\Models\Review;
 use App\Http\Requests\ReviewRequest;
 use App\Support\DisplayName;
+use App\Models\Admin;
+use App\Notifications\Admin\LowRatingReview;
 
 class ReviewController extends Controller
 {
@@ -43,6 +45,16 @@ class ReviewController extends Controller
             'comment'        => $data['comment'] ?? null,
             'display_name'   => DisplayName::mask($request->user()->name ?? ''),
         ]);
+
+        // 管理者に低評価レビューを通知（しきい値: ★2以下）
+        if ((int) $data['rating'] <= 2) {
+            Admin::query()->each(function (Admin $admin) use ($reservation) {
+                $review = $reservation->review()->latest('id')->first();
+                if ($review) {
+                    $admin->notify(new LowRatingReview($review));
+                }
+            });
+        }
 
         return redirect()
             ->route('user.mypage.index')
